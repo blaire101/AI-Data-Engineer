@@ -7,8 +7,8 @@ End-to-End AI Data Platform - RAG + AWS(Azure) + Terraform + Docker
 
 | Priority | Skill Area        | Core Topics                                        | Learning Goal      | 中文         |
 | -------- | ----------------- | -------------------------------------------------- | ----------------------------------- | ---------- |
-| ⭐⭐⭐⭐⭐    | AWS + SAA  <br> Azure-104      | Cloud architecture / Networking / IAM / Storage    | Build system design capability | 云架构与系统设计能力 |
-| ⭐⭐⭐⭐⭐    | RAG / LLM / Agent | Embeddings / Vector DB / Retrieval                 | Build AI-driven systems       | AI系统构建能力   |
+| ⭐⭐⭐⭐⭐    | [AWS + SAA](https://www.udemy.com/course/aws-certified-solutions-architect-associate-saa-c03/)  <br> [Azure-104](https://www.udemy.com/course/70533-azure/?couponCode=25BBPMXINACTIVE)      | Cloud architecture / Networking / IAM / Storage    | Build system design capability | 云架构与系统设计能力 |
+| ⭐⭐⭐⭐⭐    | RAG / LLM / Agent | Embeddings / Vector DB / Retrieval   <br> [Udemy - LLM Engineering, RAG, & AI Agents Masterclass](https://www.udemy.com/course/become-an-llm-agentic-ai-engineer-14-day-bootcamp-2025/?couponCode=25BBPMXINACTIVE)             | Build AI-driven systems       | AI系统构建能力   |
 | ⭐⭐⭐⭐     | Terraform         | Infrastructure as Code / Cloud resource management | Control infrastructure via code  | 基础设施代码化能力  |
 | ⭐⭐⭐⭐     | Docker + CI/CD    | Containerization / Automated deployment            | Engineering & production readiness   | 工程化与部署能力   |
 | ⭐⭐⭐      | Databricks        | Delta Lake / Lakehouse     | Strengthen data platform capability | 数据平台能力提升   |
