@@ -3,10 +3,6 @@ End-to-End AI Data Platform - RAG + AWS(Azure) + Terraform + Docker
 
 ---
 
-好的，去掉这两列后给你一版**简洁可直接用**👇
-
----
-
 ## 📊 Table 1: Learning Priorities & Goals
 
 | Priority | Skill Area        | Core Topics                                        | Learning Goal                       | Required      | 中文         |
