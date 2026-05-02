@@ -1,8 +1,6 @@
 # AI-Data-Engineer
 End-to-End AI Data Platform - RAG + AWS(Azure) + Terraform + Docker
 
-给你压成**两个表格版本（可直接放PPT/笔记）**👇
-
 ---
 
 # 📊 表1：学习优先级与目标
