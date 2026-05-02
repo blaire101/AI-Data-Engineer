@@ -5,14 +5,14 @@ End-to-End AI Data Platform - RAG + AWS(Azure) + Terraform + Docker
 
 ## 📊 Table 1: Learning Priorities & Goals
 
-| Priority | Skill Area        | Core Topics                                        | Learning Goal                       | Required      | 中文         |
-| -------- | ----------------- | -------------------------------------------------- | ----------------------------------- | ------------- | ---------- |
-| ⭐⭐⭐⭐⭐    | AWS + SAA         | Cloud architecture / Networking / IAM / Storage    | Build system design capability      | ✅ Yes         | 云架构与系统设计能力 |
-| ⭐⭐⭐⭐⭐    | RAG / LLM / Agent | Embeddings / Vector DB / Retrieval                 | Build AI-driven systems             | ✅ Yes         | AI系统构建能力   |
-| ⭐⭐⭐⭐     | Terraform         | Infrastructure as Code / Cloud resource management | Control infrastructure via code     | ✅ Yes         | 基础设施代码化能力  |
-| ⭐⭐⭐⭐     | Docker + CI/CD    | Containerization / Automated deployment            | Engineering & production readiness  | ✅ Yes         | 工程化与部署能力   |
-| ⭐⭐⭐      | Databricks        | Delta Lake / Lakehouse                             | Strengthen data platform capability | ⭐ Recommended | 数据平台能力提升   |
-| ⭐⭐⭐      | Data Governance   | Access control / Lineage / DQC                     | Enterprise-grade data systems       | ⭐ Recommended | 数据治理与合规能力  |
+| Priority | Skill Area        | Core Topics                                        | Learning Goal      | 中文         |
+| -------- | ----------------- | -------------------------------------------------- | ----------------------------------- | ---------- |
+| ⭐⭐⭐⭐⭐    | AWS + SAA         | Cloud architecture / Networking / IAM / Storage    | Build system design capability | 云架构与系统设计能力 |
+| ⭐⭐⭐⭐⭐    | RAG / LLM / Agent | Embeddings / Vector DB / Retrieval                 | Build AI-driven systems       | AI系统构建能力   |
+| ⭐⭐⭐⭐     | Terraform         | Infrastructure as Code / Cloud resource management | Control infrastructure via code  | 基础设施代码化能力  |
+| ⭐⭐⭐⭐     | Docker + CI/CD    | Containerization / Automated deployment            | Engineering & production readiness   | 工程化与部署能力   |
+| ⭐⭐⭐      | Databricks        | Delta Lake / Lakehouse     | Strengthen data platform capability | 数据平台能力提升   |
+| ⭐⭐⭐      | Data Governance   | Access control / Lineage / DQC    | Enterprise-grade data systems  | 数据治理与合规能力  |
 
 ---
 
