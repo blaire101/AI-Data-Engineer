@@ -3,40 +3,49 @@ End-to-End AI Data Platform - RAG + AWS(Azure) + Terraform + Docker
 
 ---
 
-# 📊 表1：学习优先级与目标
-
-| 优先级   | 技能模块              | 核心内容                   | 学习目标         | 是否必须 |
-| ----- | ----------------- | ---------------------- | ------------ | ---- |
-| ⭐⭐⭐⭐⭐ | AWS + SAA         | 云架构 / 网络 / IAM / 存储    | 建立“系统设计能力”   | ✅ 必须 |
-| ⭐⭐⭐⭐⭐ | RAG / LLM / Agent | embedding / 向量库 / 检索增强 | 构建AI系统（核心差异） | ✅ 必须 |
-| ⭐⭐⭐⭐  | Terraform         | IaC / 云资源管理            | 用代码控制基础设施    | ✅ 必须 |
-| ⭐⭐⭐⭐  | Docker + CI/CD    | 容器化 / 自动部署             | 工程化能力        | ✅ 必须 |
-| ⭐⭐⭐   | Databricks        | Delta Lake / Lakehouse | 放大数据优势       | ⭐ 推荐 |
-| ⭐⭐⭐   | 数据治理              | 权限 / 血缘 / DQC          | 企业级能力        | ⭐ 推荐 |
+好的，去掉这两列后给你一版**简洁可直接用**👇
 
 ---
 
-# 🚀 表2：6–8周执行路径（可直接照做）
+## 📊 Table 1: Learning Priorities & Goals
 
-| 阶段       | 时间   | 学什么                    | 产出            |
-| -------- | ---- | ---------------------- | ------------- |
-| 第1阶段     | 1–2周 | AWS基础 + SAA课程 + Docker | 理解云架构 + 容器化基础 |
-| 第2阶段（核心） | 3–5周 | RAG + 数据pipeline + API | ✅ 一个完整AI系统项目  |
-| 第3阶段     | 6–7周 | Terraform + IAM权限      | 用IaC部署整个系统    |
-| 第4阶段（可选） | 第8周  | Databricks / 数据治理      | 强化企业级能力       |
+| Priority | Skill Area        | Core Topics                                        | Learning Goal                       | Required      | 中文         |
+| -------- | ----------------- | -------------------------------------------------- | ----------------------------------- | ------------- | ---------- |
+| ⭐⭐⭐⭐⭐    | AWS + SAA         | Cloud architecture / Networking / IAM / Storage    | Build system design capability      | ✅ Yes         | 云架构与系统设计能力 |
+| ⭐⭐⭐⭐⭐    | RAG / LLM / Agent | Embeddings / Vector DB / Retrieval                 | Build AI-driven systems             | ✅ Yes         | AI系统构建能力   |
+| ⭐⭐⭐⭐     | Terraform         | Infrastructure as Code / Cloud resource management | Control infrastructure via code     | ✅ Yes         | 基础设施代码化能力  |
+| ⭐⭐⭐⭐     | Docker + CI/CD    | Containerization / Automated deployment            | Engineering & production readiness  | ✅ Yes         | 工程化与部署能力   |
+| ⭐⭐⭐      | Databricks        | Delta Lake / Lakehouse                             | Strengthen data platform capability | ⭐ Recommended | 数据平台能力提升   |
+| ⭐⭐⭐      | Data Governance   | Access control / Lineage / DQC                     | Enterprise-grade data systems       | ⭐ Recommended | 数据治理与合规能力  |
 
 ---
 
-# 🎯 项目最终形态（你要达到的）
+## 🚀 Table 2: 6–8 Week Execution Plan
 
-| 模块   | 技术                                      |
-| ---- | --------------------------------------- |
-| 数据层  | S3 / 数据pipeline                         |
-| AI层  | embedding + vector DB（FAISS / Pinecone） |
-| 服务层  | FastAPI                                 |
-| 工程化  | Docker                                  |
-| 基础设施 | Terraform                               |
-| 安全   | IAM                                     |
+| Phase              | Timeline | Learning Focus                  | Deliverable                                | 中文        |
+| ------------------ | -------- | ------------------------------- | ------------------------------------------ | --------- |
+| Phase 1            | Week 1–2 | AWS fundamentals + SAA + Docker | Understand cloud architecture & containers | 云基础与容器化入门 |
+| Phase 2 (Core)     | Week 3–5 | RAG + Data Pipeline + API       | ✅ End-to-end AI system project             | 核心AI系统项目  |
+| Phase 3            | Week 6–7 | Terraform + IAM                 | Deploy system using IaC                    | 基础设施与权限控制 |
+| Phase 4 (Optional) | Week 8   | Databricks / Data Governance    | Enhance enterprise capabilities            | 企业级能力强化   |
+
+---
+
+## 🎯 Final Project Architecture (Target State)
+
+| Layer          | Technologies                              | 中文      |
+| -------------- | ----------------------------------------- | ------- |
+| Data Layer     | S3 / Data Pipeline                        | 数据采集与存储 |
+| AI Layer       | Embeddings + Vector DB (FAISS / Pinecone) | 检索与向量能力 |
+| Service Layer  | FastAPI                                   | 服务接口层   |
+| Engineering    | Docker                                    | 容器化部署   |
+| Infrastructure | Terraform                                 | 基础设施自动化 |
+| Security       | IAM                                       | 权限与安全控制 |
+
+---
+
+> This project demonstrates the ability to design and deploy a production-ready AI data platform integrating cloud infrastructure, data pipelines, and LLM-based retrieval systems.
+
 
 # AI Data Engineer Project: RAG-based Data Platform on AWS
 
