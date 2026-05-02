@@ -9,7 +9,7 @@ End-to-End AI Data Platform - RAG + AWS(Azure) + Terraform + Docker
 | -------- | ----------------- | -------------------------------------------------- | ----------------------------------- | ---------- |
 | ⭐⭐⭐⭐⭐    | [AWS + SAA](https://www.udemy.com/course/aws-certified-solutions-architect-associate-saa-c03/)  <br> [Azure-104](https://www.udemy.com/course/70533-azure/?couponCode=25BBPMXINACTIVE)      | Cloud architecture / Networking / IAM / Storage    | Build system design capability | 云架构与系统设计能力 |
 | ⭐⭐⭐⭐⭐    | RAG / LLM / Agent | Embeddings / Vector DB / Retrieval   <br> [Udemy - LLM Engineering, RAG, & AI Agents Masterclass](https://www.udemy.com/course/become-an-llm-agentic-ai-engineer-14-day-bootcamp-2025/?couponCode=25BBPMXINACTIVE)             | Build AI-driven systems       | AI系统构建能力   |
-| ⭐⭐⭐⭐     | Terraform         | Infrastructure as Code / Cloud resource management | Control infrastructure via code  | 基础设施代码化能力  |
+| ⭐⭐⭐⭐     | [Terraform](https://www.bilibili.com/video/BV1Jt4y1U7gJ/?spm_id_from=333.337.search-card.all.click)         | Infrastructure as Code / Cloud resource management | Control infrastructure via code  | 基础设施代码化能力  |
 | ⭐⭐⭐⭐     | Docker + CI/CD    | Containerization / Automated deployment            | Engineering & production readiness   | 工程化与部署能力   |
 | ⭐⭐⭐      | Databricks        | Delta Lake / Lakehouse     | Strengthen data platform capability | 数据平台能力提升   |
 | ⭐⭐⭐      | Data Governance   | Access control / Lineage / DQC    | Enterprise-grade data systems  | 数据治理与合规能力  |
