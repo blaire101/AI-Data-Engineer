@@ -3,6 +3,12 @@ End-to-End AI Data Platform - RAG + AWS(Azure) + Terraform + Docker
 
 ---
 
+# AWS Core Architecture Overview
+-- Typical Web Application Architecture on AWS — Key Services Reference
+
+
+
+
 ## 📊 Table 1: Learning Priorities & Goals
 
 | Priority | Skill Area        | Core Topics                                        | Learning Goal      | 中文         |
