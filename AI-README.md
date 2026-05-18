@@ -9,7 +9,7 @@ End-to-End AI Data Platform - RAG + AWS(Azure) + Terraform + Docker
 
 | 阶段 | 时间 | 课程任务 | 项目任务 | 对应项目层 | 产出 |
 |---|---|---|---|---|---|
-| **第 1 周:打地基** | Day 1-2 | 跳过课程,先动手 | 用 Xiaomi/Tencent 现成经验搭数据底座:造一份模拟支付/交易数据,建 ODS→DWD→DM→ADS 分层,加 DQC 校验 | 🔵 蓝色层(治理数据层) | 一个可信、有质量校验的数据库 |
+| **第 1 周:打地基** | Day 1-2 | 跳过课程,先动手 | 用 XMi 现成经验搭数据底座:造一份模拟支付/交易数据,建 ODS→DWD→DM→ADS 分层,加 DQC 校验 | 🔵 蓝色层(治理数据层) | 一个可信、有质量校验的数据库 |
 | | Day 3 | **M4 evals 实战(精学+跑 notebook)** | 暂停项目,吃透 evals 方法论 | 🟠 琥珀色层 | evals 笔记 + 跑通的 notebook |
 | | Day 4 | **M1 仅 task decomposition + evals 两节(精学)**;M1 其余 1.5x 速过 | 设计 agent 的任务拆解逻辑(把"为什么失败率涨"拆成步骤) | 🟣 紫色层(规划部分) | agent 任务拆解设计文档 |
 | | Day 5 | 复盘本周课程 | 把数据层 + evals 框架接起来,写第一版质量门禁 | 🔵+🟠 | 数据层 + evals 门禁打通 |
