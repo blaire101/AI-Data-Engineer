@@ -3,95 +3,39 @@ End-to-End AI Data Platform - RAG + AWS(Azure) + Terraform + Docker
 
 ---
 
-## AWS Core Architecture Overview
-> Typical Web Application Architecture on AWS — Key Services Reference
+下面是把课程学习 + 项目搭建 + 简历改写合并成的两到三周冲刺清单。我按"周"拆,每个阶段标清楚做什么、对应课程哪个模块、对应项目哪一层、产出是什么。
 
-![AWS Core Architecture Overview](./source/images/aws_full_architecture_overview_cn.svg)
+## 三周冲刺总表
 
-aws_full_architecture_overview_cn.svg
+| 阶段 | 时间 | 课程任务 | 项目任务 | 对应项目层 | 产出 |
+|---|---|---|---|---|---|
+| **第 1 周:打地基** | Day 1-2 | 跳过课程,先动手 | 用 Xiaomi/Tencent 现成经验搭数据底座:造一份模拟支付/交易数据,建 ODS→DWD→DM→ADS 分层,加 DQC 校验 | 🔵 蓝色层(治理数据层) | 一个可信、有质量校验的数据库 |
+| | Day 3 | **M4 evals 实战(精学+跑 notebook)** | 暂停项目,吃透 evals 方法论 | 🟠 琥珀色层 | evals 笔记 + 跑通的 notebook |
+| | Day 4 | **M1 仅 task decomposition + evals 两节(精学)**;M1 其余 1.5x 速过 | 设计 agent 的任务拆解逻辑(把"为什么失败率涨"拆成步骤) | 🟣 紫色层(规划部分) | agent 任务拆解设计文档 |
+| | Day 5 | 复盘本周课程 | 把数据层 + evals 框架接起来,写第一版质量门禁 | 🔵+🟠 | 数据层 + evals 门禁打通 |
+| **第 2 周:搭 agent** | Day 6-7 | **M5 规划工作流(认真看视频)** | 搭 orchestrator agent 主框架(规划 + 调度) | 🟣 紫色层 | agent 能接收问题并规划步骤 |
+| | Day 8 | **M2 Reflection(看+跑一次 notebook)** | 给 agent 加 reflection 循环(自我批判、重试) | 🟣 紫色层 | agent 能自我修正 |
+| | Day 9 | **M3 Tool Use(2x 速扫,别花时间)** | 把 SQL 工具、分析工具、洞察工具包装成 agent 可调用 | 🟢 青色层(工具层) | 三个工具接入 agent |
+| | Day 10 | 课程全部学完,无新模块 | 打通端到端:自然语言提问 → agent 规划 → 调工具 → 出报告 | 🟣+🟢+⚪ 全链路 | 第一个能跑的完整闭环 demo |
+| **第 3 周:打磨+简历** | Day 11-12 | — | 把 evals 套在 agent 输出上,做 error analysis,建回归测试套件 | 🟠 琥珀色层 | 有评估体系的生产级版本 |
+| | Day 13 | — | (可选加分)LLM 部分接 Google ADK / Gemini,命中 JD 的 Google 生态偏好 | 🟣 紫色层 | 命中 JD 偏好项 |
+| | Day 14 | — | 整理项目 README、架构图、关键指标 | 全部 | 可展示的项目包 |
+| | Day 15 | — | **改简历**(见下方两个 bullet 模板) | — | 更新后的简历 |
 
+## 第 3 周要写进简历的两个 bullet(模板)
 
-## 📊 Table 1: Learning Priorities & Goals
+| 位置 | 改写方向 | 模板(你按真实数据填) |
+|---|---|---|
+| **mi 经验段那一行 agentic** | 从"我编排了一个 workflow"扩写成"我设计了一个带方法论的系统" | "Designed a production-grade agentic analytics system with task decomposition, reflection loops, tool orchestration, and an evals harness; automated insight generation over payment/transaction data, eliminating XX% of ad-hoc analytics requests." |
+| **新增 "Selected Project" 板块** | 单独列这个 Payments Copilot,对着 JD 语言写 | "Payments Agentic Analytics Copilot — Built an AI-native analytics workflow: NL question → planning agent → SQL/analysis/insight tools → governed Iceberg data layer (ODS→DWD→DM→ADS) → evals-gated reporting. Tech: Python, SQL, LLM (ADK/Gemini), Iceberg." |
 
-| Priority | Skill Area        | Core Topics                                        | Learning Goal      | 中文         |
-| -------- | ----------------- | -------------------------------------------------- | ----------------------------------- | ---------- |
-| ⭐⭐⭐⭐⭐    | [AWS + SAA](https://www.udemy.com/course/aws-certified-solutions-architect-associate-saa-c03/)  <br> [Azure-104](https://www.udemy.com/course/70533-azure/?couponCode=25BBPMXINACTIVE)      | Cloud architecture / Networking / IAM / Storage    | Build system design capability | 云架构与系统设计能力 |
-| ⭐⭐⭐⭐⭐    | RAG / LLM / Agent | Embeddings / Vector DB / Retrieval   <br> [Udemy - LLM Engineering, RAG, & AI Agents Masterclass](https://www.udemy.com/course/become-an-llm-agentic-ai-engineer-14-day-bootcamp-2025/?couponCode=25BBPMXINACTIVE)             | Build AI-driven systems       | AI系统构建能力   |
-| ⭐⭐⭐⭐     | [Terraform](https://www.bilibili.com/video/BV1Jt4y1U7gJ/?spm_id_from=333.337.search-card.all.click)         | Infrastructure as Code / Cloud resource management | Control infrastructure via code  | 基础设施代码化能力  |
-| ⭐⭐⭐⭐     | Docker + CI/CD    | Containerization / Automated deployment            | Engineering & production readiness   | 工程化与部署能力   |
-| ⭐⭐⭐      | Databricks        | Delta Lake / Lakehouse     | Strengthen data platform capability | 数据平台能力提升   |
-| ⭐⭐⭐      | Data Governance   | Access control / Lineage / DQC    | Enterprise-grade data systems  | 数据治理与合规能力  |
+## 三个关键提醒
 
----
+| 提醒 | 说明 |
+|---|---|
+| **别按 M1→M5 顺序学** | 学习顺序是 M4 → M1(两节)→ M5 → M2 → M3,把时间砸在 evals 上 |
+| **第 1 周先动手再学课** | 蓝色层是你的强项,不依赖课程,先搭起来建立信心和地基 |
+| **课程不拿证书,拿方法论** | 简历价值在项目本身,不在 certificate;面试能用 task decomposition / reflection / evals 这套语言对话才是真加分 |
 
-## 🚀 Table 2: 6–8 Week Execution Plan
+如果时间只有两周,砍掉 Day 13(ADK 可选项)和 Day 11-12 压缩成一天,核心闭环和简历两个 bullet 必须保留。
 
-| Phase              | Timeline | Learning Focus                  | Deliverable                                | 中文        |
-| ------------------ | -------- | ------------------------------- | ------------------------------------------ | --------- |
-| Phase 1            | Week 1–2 | AWS fundamentals + SAA + Docker | Understand cloud architecture & containers | 云基础与容器化入门 |
-| Phase 2 (Core)     | Week 3–5 | RAG + Data Pipeline + API       | ✅ End-to-end AI system project             | 核心AI系统项目  |
-| Phase 3            | Week 6–7 | Terraform + IAM                 | Deploy system using IaC                    | 基础设施与权限控制 |
-| Phase 4 (Optional) | Week 8   | Databricks / Data Governance    | Enhance enterprise capabilities            | 企业级能力强化   |
-
----
-
-## 🎯 Final Project Architecture (Target State)
-
-| Layer          | Technologies                              | 中文      |
-| -------------- | ----------------------------------------- | ------- |
-| Data Layer     | S3 / Data Pipeline                        | 数据采集与存储 |
-| AI Layer       | Embeddings + Vector DB (FAISS / Pinecone) | 检索与向量能力 |
-| Service Layer  | FastAPI                                   | 服务接口层   |
-| Engineering    | Docker                                    | 容器化部署   |
-| Infrastructure | Terraform                                 | 基础设施自动化 |
-| Security       | IAM                                       | 权限与安全控制 |
-
----
-
-> This project demonstrates the ability to design and deploy a production-ready AI data platform integrating cloud infrastructure, data pipelines, and LLM-based retrieval systems.
-
-
-# AI Data Engineer Project: RAG-based Data Platform on AWS
-
-## 🚀 Overview
-This project demonstrates an end-to-end AI data platform that integrates:
-- Data pipeline (ETL)
-- Retrieval-Augmented Generation (RAG)
-- Cloud infrastructure (AWS)
-- Infrastructure as Code (Terraform)
-
-## 🏗 Architecture
-- Data Source → S3
-- ETL Pipeline → Spark / Python
-- Embedding → OpenAI / HuggingFace
-- Vector DB → FAISS / Pinecone
-- API Layer → FastAPI
-- Deployment → Docker + Terraform
-
-## ⚙️ Tech Stack
-- AWS (S3, IAM) / Azure Pending
-- Terraform
-- Docker
-- Python / FastAPI
-- FAISS / Pinecone
-- LangChain (optional)
-
-## 🔥 Key Features
-- End-to-end data ingestion pipeline
-- RAG-based query system
-- Infrastructure fully defined with Terraform
-- Containerized deployment
-- Secure access with IAM
-
-## 📊 What This Project Shows
-- Ability to design cloud-native data systems
-- Integration of AI (LLM) into data workflows
-- Production-level engineering practices
-
-## 🧠 Future Improvements
-- Add monitoring (Prometheus / Grafana)
-- Add streaming pipeline
-- Add data governance layer
-
-## 📎 How to Run
-...
