@@ -1,0 +1,620 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Design 2 — Interview Q&A</title>
+<style>
+  :root {
+    --bg: #F7F8FA;
+    --surface: #FFFFFF;
+    --border: #E2E5EC;
+    --text: #12192B;
+    --text-dim: #4A5568;
+    --text-faint: #8A94A8;
+    --amber: #C96A1A;
+    --amber-bg: #FEF3E8;
+    --cyan: #0E7C8F;
+    --cyan-bg: #E8F6F9;
+    --green: #1A7A50;
+    --green-bg: #E8F5EE;
+    --violet: #5C3FB5;
+    --violet-bg: #EEEAFA;
+    --red: #B93030;
+    --red-bg: #FCEAEA;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: -apple-system, 'Segoe UI', sans-serif;
+    font-size: 15px;
+    line-height: 1.6;
+    padding: 40px 24px 80px;
+  }
+
+  .page-header {
+    max-width: 780px;
+    margin: 0 auto 40px;
+    border-bottom: 2px solid var(--text);
+    padding-bottom: 20px;
+  }
+
+  .page-header .eyebrow {
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--text-faint);
+    margin-bottom: 8px;
+  }
+
+  .page-header h1 {
+    font-size: 28px;
+    font-weight: 700;
+    color: var(--text);
+    letter-spacing: -0.02em;
+    margin-bottom: 10px;
+  }
+
+  .page-header p {
+    font-size: 14px;
+    color: var(--text-dim);
+  }
+
+  .section {
+    max-width: 780px;
+    margin: 0 auto 48px;
+  }
+
+  .section-label {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    margin-bottom: 16px;
+  }
+
+  .section-label .dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+  }
+
+  .dot-amber { background: var(--amber); }
+  .dot-cyan { background: var(--cyan); }
+  .dot-green { background: var(--green); }
+  .dot-violet { background: var(--violet); }
+  .dot-red { background: var(--red); }
+
+  .label-amber { color: var(--amber); }
+  .label-cyan { color: var(--cyan); }
+  .label-green { color: var(--green); }
+  .label-violet { color: var(--violet); }
+  .label-red { color: var(--red); }
+
+  .qa-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    margin-bottom: 16px;
+    overflow: hidden;
+  }
+
+  .qa-question {
+    padding: 16px 20px;
+    font-weight: 600;
+    font-size: 15px;
+    color: var(--text);
+    cursor: pointer;
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 12px;
+    border-bottom: 1px solid transparent;
+    transition: background 0.15s;
+    user-select: none;
+  }
+
+  .qa-question:hover {
+    background: var(--bg);
+  }
+
+  .qa-question.open {
+    border-bottom-color: var(--border);
+  }
+
+  .qa-q-text { flex: 1; }
+
+  .qa-tag {
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    padding: 3px 8px;
+    border-radius: 4px;
+    white-space: nowrap;
+    flex-shrink: 0;
+    margin-top: 2px;
+  }
+
+  .tag-amber { background: var(--amber-bg); color: var(--amber); }
+  .tag-cyan { background: var(--cyan-bg); color: var(--cyan); }
+  .tag-green { background: var(--green-bg); color: var(--green); }
+  .tag-violet { background: var(--violet-bg); color: var(--violet); }
+  .tag-red { background: var(--red-bg); color: var(--red); }
+
+  .chevron {
+    font-size: 12px;
+    color: var(--text-faint);
+    transition: transform 0.2s;
+    flex-shrink: 0;
+    margin-top: 3px;
+  }
+
+  .open .chevron { transform: rotate(180deg); }
+
+  .qa-answer {
+    display: none;
+    padding: 18px 20px;
+    color: var(--text-dim);
+    font-size: 14px;
+    line-height: 1.7;
+  }
+
+  .qa-answer.visible { display: block; }
+
+  .qa-answer strong {
+    color: var(--text);
+    font-weight: 600;
+  }
+
+  .qa-answer .answer-line {
+    margin-bottom: 10px;
+  }
+
+  .qa-answer .key-point {
+    background: var(--bg);
+    border-left: 3px solid var(--border);
+    padding: 10px 14px;
+    border-radius: 0 6px 6px 0;
+    margin: 12px 0;
+    font-size: 13.5px;
+  }
+
+  .key-point.amber { border-left-color: var(--amber); background: var(--amber-bg); }
+  .key-point.cyan { border-left-color: var(--cyan); background: var(--cyan-bg); }
+  .key-point.green { border-left-color: var(--green); background: var(--green-bg); }
+  .key-point.violet { border-left-color: var(--violet); background: var(--violet-bg); }
+
+  .progress-bar {
+    max-width: 780px;
+    margin: 0 auto 32px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    font-size: 13px;
+    color: var(--text-faint);
+  }
+
+  .bar-track {
+    flex: 1;
+    height: 4px;
+    background: var(--border);
+    border-radius: 2px;
+    overflow: hidden;
+  }
+
+  .bar-fill {
+    height: 100%;
+    background: var(--text);
+    border-radius: 2px;
+    transition: width 0.3s;
+  }
+
+  .expand-all {
+    max-width: 780px;
+    margin: 0 auto 24px;
+    display: flex;
+    gap: 10px;
+  }
+
+  .btn {
+    font-size: 12px;
+    font-weight: 600;
+    padding: 7px 14px;
+    border-radius: 6px;
+    border: 1px solid var(--border);
+    background: var(--surface);
+    color: var(--text-dim);
+    cursor: pointer;
+    letter-spacing: 0.02em;
+    transition: background 0.1s, color 0.1s;
+  }
+
+  .btn:hover {
+    background: var(--text);
+    color: #fff;
+    border-color: var(--text);
+  }
+
+  code {
+    font-family: 'Menlo', 'Consolas', monospace;
+    font-size: 12.5px;
+    background: var(--bg);
+    border: 1px solid var(--border);
+    padding: 1px 5px;
+    border-radius: 4px;
+    color: var(--text);
+  }
+</style>
+</head>
+<body>
+
+<div class="page-header">
+  <div class="eyebrow">GovTech DE II — Technical Interview Prep</div>
+  <h1>Design 2 — Expected Q&A</h1>
+  <p>Likely questions from an AWS SAA-certified interviewer. Click any card to see the answer. Covers service selection rationale, security, scaling, and compliance.</p>
+</div>
+
+<div class="expand-all">
+  <button class="btn" onclick="toggleAll(true)">Expand all</button>
+  <button class="btn" onclick="toggleAll(false)">Collapse all</button>
+</div>
+
+<div class="progress-bar">
+  <span id="progress-label">0 / 18 reviewed</span>
+  <div class="bar-track"><div class="bar-fill" id="bar" style="width:0%"></div></div>
+</div>
+
+
+<!-- ── SECTION 1: SERVICE SELECTION ── -->
+<div class="section">
+  <div class="section-label label-amber">
+    <span class="dot dot-amber"></span>Service selection rationale
+  </div>
+
+  <div class="qa-card">
+    <div class="qa-question" onclick="toggle(this)">
+      <span class="qa-q-text">Why DynamoDB for metadata — not Aurora or RDS?</span>
+      <span class="qa-tag tag-amber">Selection</span>
+      <span class="chevron">▼</span>
+    </div>
+    <div class="qa-answer">
+      <div class="answer-line">The metadata write pattern is simple: one record written per image, independently, with no joins or transactions needed. DynamoDB handles exactly this — high-throughput, isolated single-row writes at low latency.</div>
+      <div class="key-point amber">The decisive reason is native TTL. DynamoDB reads the <code>ttl</code> field and auto-deletes the record at expiry — no cron job, no extra Lambda, no extra failure point. Aurora has no equivalent native row-expiry mechanism.</div>
+      <div class="answer-line">Aurora is the right choice when you need complex SQL, multi-table JOINs, or ACID transactions. None of those apply here. Using Aurora would mean running a persistent database instance — paying for compute even at zero load — while DynamoDB on-demand scales to zero when idle.</div>
+    </div>
+  </div>
+
+  <div class="qa-card">
+    <div class="qa-question" onclick="toggle(this)">
+      <span class="qa-q-text">Why Lambda — not ECS or EC2 — for image processing?</span>
+      <span class="qa-tag tag-amber">Selection</span>
+      <span class="chevron">▼</span>
+    </div>
+    <div class="qa-answer">
+      <div class="answer-line">The processing trigger is one S3 ObjectCreated event per image upload. Lambda maps directly onto this model: one event = one invocation. There is no persistent work happening between uploads, so a persistent server (ECS task or EC2 instance) would be idle most of the time and still charging.</div>
+      <div class="key-point amber">Lambda auto-scales per invocation with no configuration — 500 simultaneous uploads produce 500 parallel executions, then drop back to zero. ECS can autoscale too, but with more latency and more configuration overhead.</div>
+      <div class="answer-line">The company's existing code runs unchanged inside a container image in ECR. Lambda supports container images natively, so there is no need to repackage or rewrite anything to deploy on Lambda rather than ECS.</div>
+    </div>
+  </div>
+
+  <div class="qa-card">
+    <div class="qa-question" onclick="toggle(this)">
+      <span class="qa-q-text">Why self-managed Kafka on EKS — not MSK Serverless?</span>
+      <span class="qa-tag tag-amber">Selection</span>
+      <span class="chevron">▼</span>
+    </div>
+    <div class="qa-answer">
+      <div class="answer-line">The brief is explicit: <em>"This Kafka stream has to be managed by the company's engineers."</em> MSK Serverless abstracts the broker layer entirely — engineers can produce and consume messages, but cannot configure broker settings, tune partition counts, or control scaling decisions directly.</div>
+      <div class="key-point amber">EKS keeps Kafka brokers as Kubernetes pods. Engineers have full access to broker configuration, can apply custom resource limits, and control exactly when and how the cluster scales. That level of control is what the brief requires.</div>
+      <div class="answer-line">MSK would be the right choice if the brief asked for minimal operational overhead. It did not — it specifically asked for engineer control, so the managed option is the wrong trade-off here.</div>
+    </div>
+  </div>
+
+  <div class="qa-card">
+    <div class="qa-question" onclick="toggle(this)">
+      <span class="qa-q-text">Why S3 for image storage — not EFS or a database blob column?</span>
+      <span class="qa-tag tag-amber">Selection</span>
+      <span class="chevron">▼</span>
+    </div>
+    <div class="qa-answer">
+      <div class="answer-line">S3 is the standard AWS object store for binary data at scale. It integrates natively with Lambda via S3 Event Notifications, with Lifecycle rules for automatic deletion, and with SSE-KMS for encryption — all three are required by this design.</div>
+      <div class="key-point amber">S3 Lifecycle rules handle the 7-day hard deletion automatically, with no custom code. No other AWS storage option has an equivalent declarative, per-bucket expiry mechanism that works at this scale.</div>
+      <div class="answer-line">EFS is a network file system suited for workloads that need POSIX semantics and concurrent file access. Storing binary images in a database blob column would make the 7-day deletion, encryption, and retrieval by Lambda significantly more complex than necessary.</div>
+    </div>
+  </div>
+
+  <div class="qa-card">
+    <div class="qa-question" onclick="toggle(this)">
+      <span class="qa-q-text">Why use MSK Connect to move data from Kafka to S3 — not a custom consumer?</span>
+      <span class="qa-tag tag-amber">Selection</span>
+      <span class="chevron">▼</span>
+    </div>
+    <div class="qa-answer">
+      <div class="answer-line">MSK Connect is a managed connector framework. The S3 Sink connector is a pre-built, maintained component that reads from a Kafka topic and writes to S3 — exactly the job needed here.</div>
+      <div class="key-point amber">Writing a custom Kafka consumer adds code that needs to be written, tested, deployed, monitored, and maintained. MSK Connect eliminates that entirely — the connector is configured, not coded.</div>
+      <div class="answer-line">The only reason to write a custom consumer would be if the transformation logic between Kafka and S3 was complex enough that the connector couldn't handle it. For raw image bytes being sinked to S3, the connector is sufficient.</div>
+    </div>
+  </div>
+
+</div>
+
+
+<!-- ── SECTION 2: SECURITY ── -->
+<div class="section">
+  <div class="section-label label-cyan">
+    <span class="dot dot-cyan"></span>Security
+  </div>
+
+  <div class="qa-card">
+    <div class="qa-question" onclick="toggle(this)">
+      <span class="qa-q-text">Why SSE-KMS with a Customer Managed Key for the raw bucket — not SSE-S3?</span>
+      <span class="qa-tag tag-cyan">Security</span>
+      <span class="chevron">▼</span>
+    </div>
+    <div class="qa-answer">
+      <div class="answer-line">Raw images are the most sensitive data in this pipeline — they are the original, unprocessed files from users. SSE-S3 (AES-256 with an AWS-managed key) provides encryption at rest, but the key is entirely controlled by AWS.</div>
+      <div class="key-point cyan">A Customer Managed Key gives the company an emergency control: revoking the key makes every object encrypted with it immediately unreadable, even if the S3 bucket itself is accessible. This is a compliance and incident-response capability that SSE-S3 cannot provide.</div>
+      <div class="answer-line">The processed bucket uses SSE-AES256 (AWS-managed) because the processed data is less sensitive — the highest-risk original is already protected by CMK in the raw bucket, and using CMK everywhere would increase cost and operational complexity without proportional security gain.</div>
+    </div>
+  </div>
+
+  <div class="qa-card">
+    <div class="qa-question" onclick="toggle(this)">
+      <span class="qa-q-text">Why does Lambda use VPC Endpoints instead of going via the public internet?</span>
+      <span class="qa-tag tag-cyan">Security</span>
+      <span class="chevron">▼</span>
+    </div>
+    <div class="qa-answer">
+      <div class="answer-line">Lambda runs in a VPC private subnet with no internet gateway. Without VPC Endpoints, calls to S3 and DynamoDB would have to leave the VPC, traverse the public internet, and re-enter AWS — even though both services are AWS-internal.</div>
+      <div class="key-point cyan">VPC Endpoints keep traffic entirely within the AWS network. The image data never touches a public IP address at any stage of processing, which reduces the attack surface and satisfies the "security of data in transit" requirement.</div>
+      <div class="answer-line">VPC Endpoints also remove the need for a NAT Gateway for these service calls, which reduces cost and simplifies the network topology.</div>
+    </div>
+  </div>
+
+  <div class="qa-card">
+    <div class="qa-question" onclick="toggle(this)">
+      <span class="qa-q-text">What is the specific IAM policy for the Lambda function — can you give the exact permissions?</span>
+      <span class="qa-tag tag-cyan">Security</span>
+      <span class="chevron">▼</span>
+    </div>
+    <div class="qa-answer">
+      <div class="answer-line">The Lambda execution role has exactly three permissions, each scoped to one specific resource:</div>
+      <div class="key-point cyan">
+        <code>s3:GetObject</code> — raw bucket only<br>
+        <code>s3:PutObject</code> — processed bucket only<br>
+        <code>dynamodb:PutItem</code> — ImageMetadata table only
+      </div>
+      <div class="answer-line">No wildcards on Action, no wildcards on Resource. The function cannot read the processed bucket, cannot delete anything from either bucket, and cannot read any DynamoDB records — only write new ones. This is verified by mapping every boto3 API call in the handler code to its corresponding IAM statement.</div>
+    </div>
+  </div>
+
+  <div class="qa-card">
+    <div class="qa-question" onclick="toggle(this)">
+      <span class="qa-q-text">How are Kafka credentials protected — and what happens if they leak?</span>
+      <span class="qa-tag tag-cyan">Security</span>
+      <span class="chevron">▼</span>
+    </div>
+    <div class="qa-answer">
+      <div class="answer-line">Kafka broker connections use SASL/TLS — mutual authentication and encryption in transit. The credentials (username/password or certificates) are stored in AWS Secrets Manager, not embedded in any configuration file or environment variable.</div>
+      <div class="key-point cyan">At pod startup, the credential is injected from Secrets Manager into the pod's environment. It is never written to disk or committed to any repository. If a credential leaks, it can be rotated in Secrets Manager immediately — the pods pick up the new credential on their next restart without any code change.</div>
+    </div>
+  </div>
+
+</div>
+
+
+<!-- ── SECTION 3: COMPLIANCE / 7-DAY PURGE ── -->
+<div class="section">
+  <div class="section-label label-green">
+    <span class="dot dot-green"></span>Compliance · 7-day purge
+  </div>
+
+  <div class="qa-card">
+    <div class="qa-question" onclick="toggle(this)">
+      <span class="qa-q-text">Walk me through exactly how the 7-day purge works — all three mechanisms.</span>
+      <span class="qa-tag tag-green">Compliance</span>
+      <span class="chevron">▼</span>
+    </div>
+    <div class="qa-answer">
+      <div class="answer-line">There are three independent mechanisms, each covering a different data store:</div>
+      <div class="key-point green">
+        <strong>1. S3 raw bucket</strong> — Lifecycle rule: hard DELETE on day 7. Object versioning is disabled so no shadow copies survive the deletion.<br><br>
+        <strong>2. S3 processed bucket</strong> — same Lifecycle rule applied independently. A failure in one bucket's rule does not affect the other.<br><br>
+        <strong>3. DynamoDB TTL</strong> — Lambda writes a <code>ttl</code> field equal to <code>upload_time + 7 days</code> as a Unix epoch integer. DynamoDB's native TTL feature reads this field and auto-deletes the record at expiry — no cron job, no code.
+      </div>
+      <div class="answer-line">The three mechanisms are independent on purpose. If one fails, the other two still enforce the deadline. This is defense in depth applied to data retention, not just security.</div>
+    </div>
+  </div>
+
+  <div class="qa-card">
+    <div class="qa-question" onclick="toggle(this)">
+      <span class="qa-q-text">DynamoDB TTL doesn't delete immediately — there can be a delay of up to 48 hours. Is that a problem?</span>
+      <span class="qa-tag tag-green">Compliance</span>
+      <span class="chevron">▼</span>
+    </div>
+    <div class="qa-answer">
+      <div class="answer-line">This is a known characteristic of DynamoDB TTL — AWS processes deletions in the background, typically within 48 hours of the TTL timestamp passing. The record is expired immediately (Scan and Query exclude it from results once TTL passes), but the physical deletion takes time.</div>
+      <div class="key-point green">If the compliance requirement is "data must be inaccessible after 7 days" — TTL satisfies that, because expired items are excluded from query results from the moment the TTL timestamp passes. If the requirement is "data must be physically deleted on exactly day 7" — a compensating Lambda sweep would be needed to cover the gap.</div>
+      <div class="answer-line">For this design, I've treated "purged" as meaning inaccessible rather than physically deleted on the exact second. If the compliance team requires physical deletion within a hard window, that assumption would need revisiting.</div>
+    </div>
+  </div>
+
+  <div class="qa-card">
+    <div class="qa-question" onclick="toggle(this)">
+      <span class="qa-q-text">Why is S3 versioning disabled on both buckets?</span>
+      <span class="qa-tag tag-green">Compliance</span>
+      <span class="chevron">▼</span>
+    </div>
+    <div class="qa-answer">
+      <div class="answer-line">This is a deliberate trade-off in favor of compliance over recoverability. If versioning were enabled, deleting an object via a Lifecycle rule would create a delete marker rather than permanently removing the data — the actual bytes would still exist in S3 as a previous version.</div>
+      <div class="key-point green">The brief requires data to be "purged for compliance and privacy." A versioned delete that leaves recoverable data would undermine that requirement. Disabling versioning means the Lifecycle rule produces a true hard deletion — the data is gone and cannot be recovered.</div>
+      <div class="answer-line">The trade-off accepted here is that there is no recovery path if data is accidentally deleted before 7 days. That is the correct trade-off when privacy compliance is the priority.</div>
+    </div>
+  </div>
+
+</div>
+
+
+<!-- ── SECTION 4: SCALING / COST ── -->
+<div class="section">
+  <div class="section-label label-violet">
+    <span class="dot dot-violet"></span>Scaling · cost
+  </div>
+
+  <div class="qa-card">
+    <div class="qa-question" onclick="toggle(this)">
+      <span class="qa-q-text">How does this design scale to handle a sudden spike in image uploads?</span>
+      <span class="qa-tag tag-violet">Scaling</span>
+      <span class="chevron">▼</span>
+    </div>
+    <div class="qa-answer">
+      <div class="answer-line">Each layer scales independently and automatically:</div>
+      <div class="key-point violet">
+        <strong>API Gateway</strong> — managed, no configuration needed for scaling.<br><br>
+        <strong>Lambda</strong> — one invocation per S3 event. AWS scales Lambda executions in parallel automatically, up to the account concurrency limit (can be raised on request).<br><br>
+        <strong>DynamoDB on-demand</strong> — scales read/write capacity automatically with no provisioned throughput to pre-set.<br><br>
+        <strong>EKS + Cluster Autoscaler</strong> — adds EC2 nodes when Kafka broker pods are under pressure; removes idle nodes to control cost.
+      </div>
+      <div class="answer-line">The design has no single bottleneck that requires manual intervention during a spike. Each component adjusts to actual load rather than a capacity estimate made at deployment time.</div>
+    </div>
+  </div>
+
+  <div class="qa-card">
+    <div class="qa-question" onclick="toggle(this)">
+      <span class="qa-q-text">How does the design keep costs low when there is low or zero traffic?</span>
+      <span class="qa-tag tag-violet">Cost</span>
+      <span class="chevron">▼</span>
+    </div>
+    <div class="qa-answer">
+      <div class="answer-line">The design uses serverless or on-demand pricing wherever stateless components allow:</div>
+      <div class="key-point violet">
+        <strong>Lambda</strong> — zero cost at zero invocations. No idle compute.<br><br>
+        <strong>DynamoDB on-demand</strong> — zero read/write cost at zero requests. No provisioned capacity to pay for.<br><br>
+        <strong>Athena</strong> — pay per query, per byte scanned. No queries = no cost.<br><br>
+        <strong>EKS Spot Instances</strong> — Kafka brokers on Spot capacity where interruption is tolerable, at 60–70% lower cost than on-demand EC2.
+      </div>
+      <div class="answer-line">The one component that runs continuously regardless of traffic is EKS (Kafka needs persistent brokers). This is an accepted cost because the brief requires the Kafka stream to be always available and engineer-managed — it cannot be replaced with a serverless option without losing that control.</div>
+    </div>
+  </div>
+
+  <div class="qa-card">
+    <div class="qa-question" onclick="toggle(this)">
+      <span class="qa-q-text">Why no multi-region disaster recovery?</span>
+      <span class="qa-tag tag-violet">Availability</span>
+      <span class="chevron">▼</span>
+    </div>
+    <div class="qa-answer">
+      <div class="answer-line">This is a documented assumption, not an oversight. The design uses multi-AZ within ap-southeast-1 — three availability zones provide protection against a single data center failure, which covers the majority of real-world outage scenarios.</div>
+      <div class="key-point violet">Multi-region DR adds significant complexity and cost: cross-region replication for S3, DynamoDB Global Tables, Route 53 failover policies, and ongoing replication costs. For a data pipeline with a 7-day retention window, the recovery complexity of a full regional outage is disproportionate to the benefit.</div>
+      <div class="answer-line">If the brief had specified an RTO/RPO requirement that could only be satisfied by multi-region, the design would need to change. With no SLA defined, single-region multi-AZ is the right trade-off between availability, cost, and operational complexity.</div>
+    </div>
+  </div>
+
+</div>
+
+
+<!-- ── SECTION 5: BI LAYER ── -->
+<div class="section">
+  <div class="section-label label-red">
+    <span class="dot dot-red"></span>BI layer · analytics
+  </div>
+
+  <div class="qa-card">
+    <div class="qa-question" onclick="toggle(this)">
+      <span class="qa-q-text">What exactly can analysts query in Layer 6 — what data is available?</span>
+      <span class="qa-tag tag-red">BI</span>
+      <span class="chevron">▼</span>
+    </div>
+    <div class="qa-answer">
+      <div class="answer-line">Analysts query the structured metadata that Lambda writes per image: <code>image_id</code>, <code>original_key</code>, <code>processed_key</code>, <code>file_size_bytes</code>, <code>width</code>, <code>height</code>, <code>uploaded_at</code>, and <code>ttl</code>.</div>
+      <div class="key-point red">This metadata is the structured representation of each image's analytically useful attributes. Athena cannot meaningfully query binary image pixels, but it can query the metadata that describes every image — dimensions, sizes, upload times, volumes. That is what "analytical computation on the data stored" means in this context.</div>
+      <div class="answer-line">Analysts access this through QuickSight dashboards: upload trends over time, average image dimensions, total storage consumed per day — all derived from the metadata via Athena SQL, with no direct access to AWS console or raw S3 objects.</div>
+    </div>
+  </div>
+
+  <div class="qa-card">
+    <div class="qa-question" onclick="toggle(this)">
+      <span class="qa-q-text">Why Athena instead of connecting QuickSight directly to DynamoDB?</span>
+      <span class="qa-tag tag-red">BI</span>
+      <span class="chevron">▼</span>
+    </div>
+    <div class="qa-answer">
+      <div class="answer-line">DynamoDB is optimized for low-latency single-record access — it is the right tool for real-time lookup ("what is the status of image X?"). It is not designed for the aggregation and analytical queries that BI requires ("how many images were uploaded per day last week?").</div>
+      <div class="key-point red">Athena queries S3 using SQL at scale, with columnar Parquet format and date partitioning to keep query cost and latency low. Running aggregations directly against DynamoDB via Scan operations would be expensive, slow, and would consume read capacity from the same table that Lambda uses for writes — competing for throughput.</div>
+      <div class="answer-line">The two paths serve different purposes: DynamoDB handles real-time operational queries; Athena handles analytical batch queries. Keeping them separate means neither interferes with the other's performance.</div>
+    </div>
+  </div>
+
+  <div class="qa-card">
+    <div class="qa-question" onclick="toggle(this)">
+      <span class="qa-q-text">How do analysts access QuickSight — and what prevents them from modifying data?</span>
+      <span class="qa-tag tag-red">BI</span>
+      <span class="chevron">▼</span>
+    </div>
+    <div class="qa-answer">
+      <div class="answer-line">Analysts log in via IAM Identity Center (SSO) — single sign-on using their existing company identity, no separate AWS credentials required. This is the "securing access as the company expands" requirement applied to the analytics layer.</div>
+      <div class="key-point red">
+        Their IAM permission set is strictly read-only:<br>
+        <code>athena:StartQueryExecution</code><br>
+        <code>s3:GetObject</code> on the analytics bucket only<br>
+        <code>glue:GetTable</code><br><br>
+        They cannot write to any S3 bucket, cannot delete any data, and cannot access the raw or processed buckets directly.
+      </div>
+      <div class="answer-line">QuickSight itself handles dashboard rendering — analysts see charts and tables, not raw SQL or S3 paths. The only way they interact with the data is through the pre-built dashboard views.</div>
+    </div>
+  </div>
+
+</div>
+
+<script>
+  let reviewed = new Set();
+
+  function toggle(questionEl) {
+    const card = questionEl.parentElement;
+    const answer = card.querySelector('.qa-answer');
+    const isOpen = questionEl.classList.contains('open');
+
+    if (isOpen) {
+      questionEl.classList.remove('open');
+      answer.classList.remove('visible');
+    } else {
+      questionEl.classList.add('open');
+      answer.classList.add('visible');
+      reviewed.add(card);
+      updateProgress();
+    }
+  }
+
+  function toggleAll(expand) {
+    document.querySelectorAll('.qa-card').forEach(card => {
+      const q = card.querySelector('.qa-question');
+      const a = card.querySelector('.qa-answer');
+      if (expand) {
+        q.classList.add('open');
+        a.classList.add('visible');
+        reviewed.add(card);
+      } else {
+        q.classList.remove('open');
+        a.classList.remove('visible');
+      }
+    });
+    updateProgress();
+  }
+
+  function updateProgress() {
+    const total = document.querySelectorAll('.qa-card').length;
+    const count = reviewed.size;
+    document.getElementById('progress-label').textContent = `${count} / ${total} reviewed`;
+    document.getElementById('bar').style.width = `${(count / total) * 100}%`;
+  }
+</script>
+</body>
+</html>

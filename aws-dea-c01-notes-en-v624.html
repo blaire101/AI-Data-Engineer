@@ -1,0 +1,938 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AWS DEA-C01 Data Engineer Study Notes</title>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700&family=Syne:wght@400;600;700;800&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#080d1a;--surface:#0c1428;--surface2:#111e38;--surface3:#192a4e;--border:#1a3460;--text:#e4eaf6;--text2:#7d9bc4;--text3:#3d6090;--green:#00FF94;--red:#FF4757;--yellow:#FFD700;--orange:#FF8C42;--purple:#9B72FF;--cyan:#00D4FF;--teal:#00C9A7;}
+*{margin:0;padding:0;box-sizing:border-box;}
+body{background:var(--bg);color:var(--text);font-family:'Inter',sans-serif;line-height:1.6;}
+.header{background:linear-gradient(135deg,#060a14 0%,#0c1e3d 60%,#080d1a 100%);border-bottom:1px solid var(--border);padding:40px 0 0;}
+.header-inner{max-width:1400px;margin:0 auto;padding:0 40px;}
+.badge{display:inline-flex;align-items:center;gap:8px;background:rgba(0,201,167,0.1);border:1px solid rgba(0,201,167,0.35);color:var(--teal);font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:2px;padding:6px 14px;border-radius:4px;margin-bottom:20px;}
+h1{font-family:'Syne',sans-serif;font-size:clamp(20px,3vw,32px);font-weight:800;line-height:1.2;letter-spacing:-1px;margin-bottom:12px;}
+h1 span{color:var(--teal);}
+.subtitle{color:var(--text2);font-size:15px;margin-bottom:40px;max-width:660px;}
+.nav-tabs{display:flex;gap:0;border-bottom:1px solid var(--border);overflow-x:auto;scrollbar-width:none;}
+.nav-tabs::-webkit-scrollbar{display:none;}
+.tab-btn{padding:13px 17px;background:none;border:none;color:var(--text3);font-family:'Inter',sans-serif;font-size:12px;font-weight:500;cursor:pointer;white-space:nowrap;position:relative;transition:color 0.2s;}
+.tab-btn::after{content:'';position:absolute;bottom:-1px;left:0;right:0;height:2px;background:var(--teal);transform:scaleX(0);transition:transform 0.2s;}
+.tab-btn:hover{color:var(--text);}
+.tab-btn.active{color:var(--teal);}
+.tab-btn.active::after{transform:scaleX(1);}
+.wb{display:inline-block;font-family:'JetBrains Mono',monospace;font-size:9px;background:rgba(0,201,167,0.15);border:1px solid rgba(0,201,167,0.35);color:var(--teal);padding:1px 5px;border-radius:3px;margin-left:4px;}
+.container{max-width:1400px;margin:0 auto;padding:40px;}
+.tab-content{display:none;}
+.tab-content.active{display:block;}
+.sec-title{font-family:'Syne',sans-serif;font-size:20px;font-weight:700;margin-bottom:24px;display:flex;align-items:center;gap:12px;flex-wrap:wrap;}
+.tag{font-family:'JetBrains Mono',monospace;font-size:10px;background:rgba(0,201,167,0.12);color:var(--teal);border:1px solid rgba(0,201,167,0.3);padding:3px 8px;border-radius:3px;letter-spacing:1px;}
+.tag.hot{background:rgba(255,71,87,0.12);color:var(--red);border-color:rgba(255,71,87,0.3);}
+.grid-2{display:grid;grid-template-columns:1fr 1fr;gap:20px;margin-bottom:24px;}
+.grid-3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:20px;margin-bottom:24px;}
+@media(max-width:900px){.grid-2,.grid-3{grid-template-columns:1fr;}}
+.card{background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:22px;position:relative;overflow:hidden;}
+.card::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,var(--teal),transparent);}
+.card.cc::before{background:linear-gradient(90deg,var(--cyan),transparent);}
+.card.cp::before{background:linear-gradient(90deg,var(--purple),transparent);}
+.card.cg::before{background:linear-gradient(90deg,var(--green),transparent);}
+.card.cy::before{background:linear-gradient(90deg,var(--yellow),transparent);}
+.card.cr::before{background:linear-gradient(90deg,var(--red),transparent);}
+.card.co::before{background:linear-gradient(90deg,var(--orange),transparent);}
+.card-title{font-family:'Syne',sans-serif;font-size:12px;font-weight:700;letter-spacing:1.2px;text-transform:uppercase;margin-bottom:14px;color:var(--text2);}
+.full-card{background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:26px;margin-bottom:24px;position:relative;overflow:hidden;}
+.full-card::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,var(--teal),var(--cyan),transparent);}
+.ct{width:100%;border-collapse:collapse;font-size:13px;margin-bottom:16px;}
+.ct th{background:var(--surface3);color:var(--cyan);font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:1px;padding:10px 13px;text-align:left;border:1px solid var(--border);}
+.ct td{padding:10px 13px;border:1px solid var(--border);color:var(--text2);vertical-align:top;}
+.ct tr:hover td{background:rgba(255,255,255,0.02);color:var(--text);}
+.yes{color:var(--green);font-weight:600;}
+.no{color:var(--red);}
+.hl{color:var(--yellow);font-weight:600;}
+.kv{list-style:none;}
+.kv li{display:flex;gap:10px;padding:7px 0;border-bottom:1px solid rgba(26,52,96,0.5);font-size:13px;align-items:flex-start;}
+.kv li:last-child{border-bottom:none;}
+.kk{font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--cyan);min-width:150px;flex-shrink:0;}
+.kval{color:var(--text2);}
+.kw{display:inline-block;background:rgba(0,201,167,0.1);border:1px solid rgba(0,201,167,0.3);color:var(--teal);font-family:'JetBrains Mono',monospace;font-size:11px;padding:2px 7px;border-radius:4px;margin:2px;font-weight:500;}
+.kw.o{background:rgba(255,140,66,0.1);border-color:rgba(255,140,66,0.3);color:var(--orange);}
+.kw.c{background:rgba(0,212,255,0.1);border-color:rgba(0,212,255,0.3);color:var(--cyan);}
+.kw.g{background:rgba(0,255,148,0.1);border-color:rgba(0,255,148,0.3);color:var(--green);}
+.kw.p{background:rgba(155,114,255,0.1);border-color:rgba(155,114,255,0.3);color:var(--purple);}
+.kw.r{background:rgba(255,71,87,0.1);border-color:rgba(255,71,87,0.3);color:var(--red);}
+.tip{background:rgba(255,215,0,0.05);border:1px solid rgba(255,215,0,0.22);border-left:3px solid var(--yellow);padding:13px 17px;border-radius:0 8px 8px 0;font-size:13px;color:var(--text2);margin:12px 0;}
+.tip strong{color:var(--yellow);}
+.alert{background:rgba(255,71,87,0.05);border:1px solid rgba(255,71,87,0.22);border-left:3px solid var(--red);padding:13px 17px;border-radius:0 8px 8px 0;font-size:13px;color:var(--text2);margin:12px 0;}
+.alert strong{color:var(--red);}
+.info{background:rgba(0,212,255,0.05);border:1px solid rgba(0,212,255,0.22);border-left:3px solid var(--cyan);padding:13px 17px;border-radius:0 8px 8px 0;font-size:13px;color:var(--text2);margin:12px 0;}
+.info strong{color:var(--cyan);}
+ul.bl{list-style:none;padding:0;}
+ul.bl li{padding:5px 0 5px 18px;position:relative;font-size:13px;color:var(--text2);line-height:1.6;}
+ul.bl li::before{content:'→';position:absolute;left:0;color:var(--teal);font-size:11px;}
+.tr{display:flex;align-items:flex-start;gap:12px;padding:10px 14px;background:var(--surface2);border-radius:6px;border:1px solid var(--border);font-size:12px;margin-bottom:6px;}
+.tl{font-family:'JetBrains Mono',monospace;color:var(--text);min-width:190px;flex-shrink:0;}
+.tc2{color:var(--green);min-width:80px;font-size:11px;}
+.tu{color:var(--text3);font-size:11px;}
+.wr{display:flex;align-items:center;gap:12px;margin-bottom:10px;}
+.wl{font-family:'JetBrains Mono',monospace;font-size:12px;color:var(--text2);min-width:270px;}
+.wt{flex:1;height:22px;background:var(--surface2);border-radius:4px;overflow:hidden;border:1px solid var(--border);}
+.wf{height:100%;display:flex;align-items:center;padding-left:10px;font-family:'JetBrains Mono',monospace;font-size:11px;color:#fff;font-weight:700;border-radius:4px;}
+.wp{font-family:'JetBrains Mono',monospace;font-size:12px;font-weight:700;min-width:36px;text-align:right;}
+svg text{font-family:'JetBrains Mono',monospace;}
+.qcard{background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:26px;margin-bottom:20px;}
+.qnum{font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--text3);letter-spacing:2px;margin-bottom:10px;}
+.qq{font-size:14px;font-weight:500;color:var(--text);margin-bottom:18px;line-height:1.75;}
+.qopts{list-style:none;display:flex;flex-direction:column;gap:8px;}
+.qopt{display:flex;align-items:flex-start;gap:12px;padding:11px 15px;border:1px solid var(--border);border-radius:8px;cursor:pointer;transition:all 0.15s;font-size:13px;color:var(--text2);user-select:none;}
+.qopt:hover{border-color:var(--teal);color:var(--text);background:rgba(0,201,167,0.05);}
+.qopt.correct{border-color:var(--green);background:rgba(0,255,148,0.07);color:var(--green);}
+.qopt.wrong{border-color:var(--red);background:rgba(255,71,87,0.07);color:var(--red);}
+.ol{font-family:'JetBrains Mono',monospace;font-size:11px;font-weight:700;min-width:22px;height:22px;display:flex;align-items:center;justify-content:center;border:1px solid currentColor;border-radius:4px;flex-shrink:0;margin-top:1px;}
+.qexp{display:none;margin-top:14px;padding:15px;background:rgba(0,255,148,0.04);border:1px solid rgba(0,255,148,0.18);border-radius:8px;font-size:13px;color:var(--text2);line-height:1.7;}
+.qexp.show{display:block;}
+.qexp strong{color:var(--green);}
+.pbar{height:3px;background:var(--surface3);border-radius:2px;margin-bottom:28px;overflow:hidden;}
+.pfill{height:100%;background:linear-gradient(90deg,var(--teal),var(--cyan));border-radius:2px;transition:width 0.4s ease;}
+.sdis{background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:24px;text-align:center;margin-bottom:24px;}
+.snum{font-family:'Syne',sans-serif;font-size:48px;font-weight:800;color:var(--teal);}
+h3{font-family:'Syne',sans-serif;font-size:14px;font-weight:600;margin:16px 0 8px;color:var(--cyan);}
+.pf{display:flex;align-items:center;gap:6px;flex-wrap:wrap;padding:16px;background:var(--surface2);border-radius:8px;border:1px solid var(--border);margin:12px 0;}
+.pfb{background:var(--surface3);border:1px solid var(--border);border-radius:6px;padding:8px 12px;font-family:'JetBrains Mono',monospace;font-size:11px;text-align:center;white-space:nowrap;}
+.pfb.t{border-color:var(--teal);color:var(--teal);background:rgba(0,201,167,0.08);}
+.pfb.c{border-color:var(--cyan);color:var(--cyan);background:rgba(0,212,255,0.08);}
+.pfb.o{border-color:var(--orange);color:var(--orange);background:rgba(255,140,66,0.08);}
+.pfb.p{border-color:var(--purple);color:var(--purple);background:rgba(155,114,255,0.08);}
+.pfb.g{border-color:var(--green);color:var(--green);background:rgba(0,255,148,0.08);}
+.pfb.y{border-color:var(--yellow);color:var(--yellow);background:rgba(255,215,0,0.08);}
+.pfa{color:var(--text3);font-size:16px;}
+
+/* ── TTS speak buttons ── */
+.sp-card {
+  position: absolute; top: 10px; right: 12px; z-index: 10;
+  display: inline-flex; align-items: center; gap: 4px;
+  font-size: 11px; font-weight: 600;
+  background: rgba(0,201,167,0.12); color: var(--teal);
+  border: 1px solid rgba(0,201,167,0.35);
+  border-radius: 5px; padding: 3px 9px; cursor: pointer;
+  transition: all 0.15s; white-space: nowrap;
+}
+.sp-card:hover { background: rgba(0,201,167,0.25); }
+.sp-card.playing {
+  background: rgba(255,71,87,0.15); color: var(--red);
+  border-color: rgba(255,71,87,0.4);
+}
+</style>
+</head>
+<body>
+<div class="header">
+<div class="header-inner">
+<div class="badge">DEA-C01 · Data Engineer Study Notes · 2026</div>
+<div style="display:flex;align-items:flex-start;gap:14px;flex-wrap:wrap;">
+<h1 id="main-title">AWS <span>Data Engineer</span> Certification Study Guide</h1>
+<button onclick="speakCard(this,'main-title')" class="sp-card" style="position:static;margin-top:6px;flex-shrink:0;">🔊</button>
+</div>
+<p class="subtitle">AWS Certified Data Engineer – Associate (DEA-C01) · Sorted by exam weight · Core service diagrams · 12 scenario practice questions<br>Official four domains: Data Ingestion &amp; Transformation 34% · Data Store Management 26% · Operations &amp; Support 22% · Security &amp; Governance 18%</p>
+<nav class="nav-tabs">
+  <button class="tab-btn active" onclick="sw('weight',this)">📊 Exam Weights</button>
+  <button class="tab-btn" onclick="sw('ingest',this)">🔄 Ingestion &amp; Transform<span class="wb">34%</span></button>
+  <button class="tab-btn" onclick="sw('store',this)">🗄️ Data Storage<span class="wb">26%</span></button>
+  <button class="tab-btn" onclick="sw('ops',this)">⚙️ Operations<span class="wb">22%</span></button>
+  <button class="tab-btn" onclick="sw('security',this)">🔐 Security &amp; Governance<span class="wb">18%</span></button>
+  <button class="tab-btn" onclick="sw('services',this)">🛠️ Services Quick Ref</button>
+  <button class="tab-btn" onclick="sw('keywords',this)">🎯 Keywords</button>
+  <button class="tab-btn" onclick="sw('quiz',this)">📝 Practice Quiz</button>
+</nav>
+</div>
+</div>
+<div class="container">
+
+<!-- Domain Weights -->
+<div id="tab-weight" class="tab-content active">
+<div class="sec-title">📊 DEA-C01 Official Domain Weights</div>
+<div class="full-card" id="sc1" style="position:relative"><button class="sp-card" id="btn-sc1" onclick="event.stopPropagation();speakCard(this,'sc1')" title="Read aloud">🔊</button>
+<div class="card-title" id="sc2" style="position:relative"><button class="sp-card" id="btn-sc2" onclick="event.stopPropagation();speakCard(this,'sc2')" title="Read aloud">🔊</button>Four Domain Weight Distribution (Official Data)</div>
+<div class="wr"><div class="wl">🔄 Domain 1: Data Ingestion &amp; Transformation</div><div class="wt"><div class="wf" style="width:34%;background:linear-gradient(90deg,#00C9A7,#00FF94);">34%</div></div><div class="wp" style="color:var(--teal)">34%</div></div>
+<div class="wr"><div class="wl">🗄️ Domain 2: Data Store Management</div><div class="wt"><div class="wf" style="width:26%;background:linear-gradient(90deg,#00D4FF,#38BDF8);">26%</div></div><div class="wp" style="color:var(--cyan)">26%</div></div>
+<div class="wr"><div class="wl">⚙️ Domain 3: Data Operations &amp; Support</div><div class="wt"><div class="wf" style="width:22%;background:linear-gradient(90deg,#9B72FF,#C4B5FD);">22%</div></div><div class="wp" style="color:var(--purple)">22%</div></div>
+<div class="wr"><div class="wl">🔐 Domain 4: Data Security &amp; Governance</div><div class="wt"><div class="wf" style="width:18%;background:linear-gradient(90deg,#FF8C42,#FFA500);">18%</div></div><div class="wp" style="color:var(--orange)">18%</div></div>
+<div class="tip"><strong>Study Strategy:</strong> Domain 1 (34%) has the highest weight — master Glue ETL / Kinesis / DMS / format conversion. Domain 2 (26%) tests storage selection: Redshift vs S3 vs DynamoDB. Domain 3 (22%) tests Step Functions orchestration, CloudWatch monitoring, data quality. Domain 4 (18%) tests Lake Formation fine-grained permissions, KMS, and Macie PII detection.</div>
+</div>
+<div class="grid-2">
+<div class="card" id="sc3" style="position:relative"><button class="sp-card" id="btn-sc3" onclick="event.stopPropagation();speakCard(this,'sc3')" title="Read aloud">🔊</button>
+<div class="card-title" id="sc4" style="position:relative"><button class="sp-card" id="btn-sc4" onclick="event.stopPropagation();speakCard(this,'sc4')" title="Read aloud">🔊</button>Domain 1 Ingestion &amp; Transform 34% — Key Topics</div>
+<ul class="bl">
+<li>Kinesis Data Streams (real-time) vs Firehose (near real-time loading) vs MSK (managed Kafka)</li>
+<li>Glue ETL Job (Serverless Spark) vs DataBrew (visual no-code)</li>
+<li>AWS DMS: homogeneous/heterogeneous migration, CDC continuous change capture</li>
+<li>Batch ingestion: S3 + Glue Crawler + Athena CTAS</li>
+<li>Format conversion: CSV/JSON → Parquet/ORC (columnar is more efficient)</li>
+<li>Glue Job Bookmark: incremental processing, no re-reads</li>
+<li>AppFlow: SaaS data sources (Salesforce) → S3</li>
+<li>EventBridge / Lambda triggering Glue Job scheduling</li>
+</ul>
+</div>
+<div class="card cc" id="sc5" style="position:relative"><button class="sp-card" id="btn-sc5" onclick="event.stopPropagation();speakCard(this,'sc5')" title="Read aloud">🔊</button>
+<div class="card-title" id="sc6" style="position:relative"><button class="sp-card" id="btn-sc6" onclick="event.stopPropagation();speakCard(this,'sc6')" title="Read aloud">🔊</button>Domain 2 Data Store Management 26% — Key Topics</div>
+<ul class="bl">
+<li>Redshift: OLAP columnar data warehouse, Distribution Style and Sort Key</li>
+<li>S3 Data Lake: partition strategy, Parquet format is optimal</li>
+<li>Lake Formation: fine-grained permissions (column/row level), Data Catalog</li>
+<li>Glue Data Catalog: Crawler auto-scans schema</li>
+<li>Redshift Spectrum: query S3 directly (no loading required)</li>
+<li>Athena: Serverless SQL on S3, billed by data scanned</li>
+<li>EMR: Hadoop/Spark cluster, PB-scale big data processing</li>
+<li>DynamoDB: high-frequency point queries, millisecond latency, auto-scaling</li>
+</ul>
+</div>
+</div>
+<div class="grid-2">
+<div class="card cp" id="sc7" style="position:relative"><button class="sp-card" id="btn-sc7" onclick="event.stopPropagation();speakCard(this,'sc7')" title="Read aloud">🔊</button>
+<div class="card-title" id="sc8" style="position:relative"><button class="sp-card" id="btn-sc8" onclick="event.stopPropagation();speakCard(this,'sc8')" title="Read aloud">🔊</button>Domain 3 Operations &amp; Support 22% — Key Topics</div>
+<ul class="bl">
+<li>Step Functions: stateful workflows with error handling and retries</li>
+<li>MWAA (Managed Airflow): complex Python DAG scheduling</li>
+<li>CloudWatch: monitor Glue/Kinesis/EMR, alarms trigger SNS</li>
+<li>Glue Job failures: insufficient DPU, data skew, Job Bookmark</li>
+<li>Glue Data Quality: DQ rules embedded in ETL pipeline</li>
+<li>Redshift query optimization: VACUUM, ANALYZE, WLM</li>
+<li>Kinesis scaling: IteratorAgeMilliseconds rising → add Shards</li>
+<li>EMR Transient Cluster: auto-terminate after task completes, saves cost</li>
+</ul>
+</div>
+<div class="card co" id="sc9" style="position:relative"><button class="sp-card" id="btn-sc9" onclick="event.stopPropagation();speakCard(this,'sc9')" title="Read aloud">🔊</button>
+<div class="card-title" id="sc10" style="position:relative"><button class="sp-card" id="btn-sc10" onclick="event.stopPropagation();speakCard(this,'sc10')" title="Read aloud">🔊</button>Domain 4 Security &amp; Governance 18% — Key Topics</div>
+<ul class="bl">
+<li>Lake Formation: unified data lake permissions (column/row level Grant)</li>
+<li>KMS CMK: at-rest encryption for S3/Redshift/Glue/Kinesis</li>
+<li>IAM Role: permissions for Glue/EMR/Lambda to access resources</li>
+<li>Macie: identifies PII data in S3</li>
+<li>Redshift RLS + Dynamic Data Masking (DDM)</li>
+<li>CloudTrail: audits all API call logs</li>
+<li>VPC Endpoint: private access for Glue/Kinesis/S3 without going through public internet</li>
+<li>AWS Config: configuration change tracking, automated compliance rule detection</li>
+</ul>
+</div>
+</div>
+<div class="full-card" id="sc11" style="position:relative"><button class="sp-card" id="btn-sc11" onclick="event.stopPropagation();speakCard(this,'sc11')" title="Read aloud">🔊</button>
+<div class="card-title" id="sc12" style="position:relative"><button class="sp-card" id="btn-sc12" onclick="event.stopPropagation();speakCard(this,'sc12')" title="Read aloud">🔊</button>Exam Basic Information</div>
+<div class="grid-3">
+<div>
+<ul class="kv">
+<li><span class="kk">Questions</span><span class="kval">65 questions (15 unscored)</span></li>
+<li><span class="kk">Duration</span><span class="kval">130 minutes</span></li>
+<li><span class="kk">Passing Score</span><span class="kval">720 / 1000</span></li>
+<li><span class="kk">Exam Fee</span><span class="kval">USD $150</span></li>
+</ul>
+</div>
+<div>
+<ul class="kv">
+<li><span class="kk">Question Types</span><span class="kval">Single choice + multiple choice (multi-choice specifies how many to select)</span></li>
+<li><span class="kk">Languages</span><span class="kval">English / Japanese / Korean / Simplified Chinese</span></li>
+<li><span class="kk">Validity</span><span class="kval">3 years</span></li>
+<li><span class="kk">Prerequisites</span><span class="kval">Recommended: SAA-C03 (Solutions Architect) first</span></li>
+</ul>
+</div>
+<div>
+<ul class="kv">
+<li><span class="kk">Recommended Courses</span><span class="kval">Stephane Maarek + Frank Kane (Udemy)</span></li>
+<li><span class="kk">Recommended Practice</span><span class="kval">Tutorials Dojo DEA-C01</span></li>
+<li><span class="kk">Study Duration</span><span class="kval">With AWS background: 4–8 weeks; Beginners: 8–12 weeks</span></li>
+<li><span class="kk">Programming</span><span class="kval">Python/PySpark (read/understand), SQL (proficient)</span></li>
+</ul>
+</div>
+</div>
+<div class="tip"><strong>Difference from SAA-C03:</strong> DEA-C01 focuses on the full data pipeline lifecycle (ingestion → transformation → storage → governance). Core services: Glue, Redshift, Kinesis, EMR, Lake Formation, Athena. SAA covers general architecture; DEA specializes in data engineering. Recommended to pass SAA first, then take DEA.</div>
+</div>
+</div>
+
+<!-- Domain 1 Ingestion & Transformation -->
+<div id="tab-ingest" class="tab-content">
+<div class="sec-title">🔄 Domain 1: Data Ingestion &amp; Transformation <span class="tag hot">Highest Weight · 34%</span></div>
+<div class="full-card" id="sc13" style="position:relative"><button class="sp-card" id="btn-sc13" onclick="event.stopPropagation();speakCard(this,'sc13')" title="Read aloud">🔊</button>
+<div class="card-title" id="sc14" style="position:relative"><button class="sp-card" id="btn-sc14" onclick="event.stopPropagation();speakCard(this,'sc14')" title="Read aloud">🔊</button>Data Pipeline Full Architecture Diagram</div>
+<div class="pf">
+  <div class="pfb t">Data Sources<br><span style="font-size:9px;color:var(--text3)">DB/API/IoT/SaaS</span></div>
+  <div class="pfa">→</div>
+  <div style="display:flex;flex-direction:column;gap:4px;">
+    <div class="pfb t">Kinesis Streams<br><span style="font-size:9px">Real-time stream</span></div>
+    <div class="pfb c">DMS / AppFlow<br><span style="font-size:9px">Batch migration</span></div>
+    <div class="pfb o">S3 Upload<br><span style="font-size:9px">File batch</span></div>
+  </div>
+  <div class="pfa">→</div>
+  <div style="display:flex;flex-direction:column;gap:4px;">
+    <div class="pfb p">Glue ETL<br><span style="font-size:9px">Spark transform</span></div>
+    <div class="pfb p">Lambda<br><span style="font-size:9px">Lightweight transform</span></div>
+    <div class="pfb p">EMR<br><span style="font-size:9px">Large-scale processing</span></div>
+  </div>
+  <div class="pfa">→</div>
+  <div style="display:flex;flex-direction:column;gap:4px;">
+    <div class="pfb g">S3 Data Lake<br><span style="font-size:9px">Parquet format</span></div>
+    <div class="pfb g">Redshift<br><span style="font-size:9px">Data Warehouse</span></div>
+    <div class="pfb g">DynamoDB<br><span style="font-size:9px">NoSQL queries</span></div>
+  </div>
+  <div class="pfa">→</div>
+  <div style="display:flex;flex-direction:column;gap:4px;">
+    <div class="pfb y">Athena<br><span style="font-size:9px">SQL on S3</span></div>
+    <div class="pfb y">QuickSight<br><span style="font-size:9px">BI visualization</span></div>
+    <div class="pfb y">SageMaker<br><span style="font-size:9px">ML modeling</span></div>
+  </div>
+</div>
+<div class="info"><strong>Exam Perspective:</strong> Each node can be an exam question — "which service is most appropriate." Focus on choosing between Glue vs Lambda vs EMR, and Kinesis Streams vs Firehose vs MSK.</div>
+</div>
+
+<div class="full-card" id="sc15" style="position:relative"><button class="sp-card" id="btn-sc15" onclick="event.stopPropagation();speakCard(this,'sc15')" title="Read aloud">🔊</button>
+<div class="card-title" id="sc16" style="position:relative"><button class="sp-card" id="btn-sc16" onclick="event.stopPropagation();speakCard(this,'sc16')" title="Read aloud">🔊</button>Kinesis Family Comparison (High-Frequency Exam Topic)</div>
+<table class="ct">
+<tr><th>Service</th><th>Purpose</th><th>Latency</th><th>Retention</th><th>Requires Consumer Code</th><th>Exam Keywords</th></tr>
+<tr><td class="hl">Kinesis Data Streams</td><td>Real-time stream, Shard model</td><td>Milliseconds</td><td>1–365 days</td><td class="yes">✓ Must write your own</td><td><span class="kw">real-time</span> <span class="kw g">replay</span> <span class="kw c">custom consumer</span></td></tr>
+<tr><td class="hl">Kinesis Firehose</td><td>Near real-time, direct loading</td><td>60s buffer</td><td>No storage</td><td class="no">✗ Fully managed</td><td><span class="kw">load to S3</span> <span class="kw c">Redshift</span> <span class="kw">near real-time</span></td></tr>
+<tr><td class="hl">Kinesis Flink (Analytics)</td><td>Stream SQL/Flink processing</td><td>Milliseconds</td><td>-</td><td>✓ Flink/SQL</td><td><span class="kw">stream SQL</span> <span class="kw c">window aggregation</span></td></tr>
+<tr><td class="hl">MSK (Managed Kafka)</td><td>Managed Kafka, high throughput</td><td>Milliseconds</td><td>Configurable</td><td class="yes">✓ Kafka API</td><td><span class="kw">existing Kafka</span> <span class="kw c">migrate Kafka</span></td></tr>
+</table>
+<div class="alert"><strong>Firehose vs Streams Trap:</strong> Need "immediate processing" or "replay data" → Kinesis Streams; need "no-code direct loading to S3/Redshift" → Firehose. Firehose minimum 60s buffer — not truly real-time.</div>
+</div>
+
+<div class="full-card" id="sc17" style="position:relative"><button class="sp-card" id="btn-sc17" onclick="event.stopPropagation();speakCard(this,'sc17')" title="Read aloud">🔊</button>
+<div class="card-title" id="sc18" style="position:relative"><button class="sp-card" id="btn-sc18" onclick="event.stopPropagation();speakCard(this,'sc18')" title="Read aloud">🔊</button>Glue Family (Most Core Service for DEA-C01)</div>
+<div class="grid-3">
+<div class="card" style="padding:16px;">
+<div class="card-title" style="font-size:11px;">Glue ETL Job</div>
+<ul class="bl">
+<li>Serverless Spark distributed computing</li>
+<li>Python Shell or PySpark scripts</li>
+<li>DPU configuration controls parallelism and cost</li>
+<li><strong style="color:var(--yellow)">Job Bookmark</strong>: tracks processing position for incremental loads</li>
+<li>JDBC connections to databases</li>
+<li>Dynamic Frames (Glue-specific data structure)</li>
+</ul>
+<div class="tip" style="margin-top:8px;"><strong>Keywords:</strong> large-scale ETL, Spark, DPU, incremental</div>
+</div>
+<div class="card cc" style="padding:16px;">
+<div class="card-title" style="font-size:11px;">Glue Data Catalog</div>
+<ul class="bl">
+<li>Unified metadata repository (Schema/table structure)</li>
+<li>Crawler auto-scans S3/RDS/Redshift</li>
+<li>Shared by Athena / Redshift Spectrum / EMR</li>
+<li>Replaces Hive Metastore</li>
+<li>Cross-account sharing (Resource Policy)</li>
+</ul>
+<div class="tip" style="margin-top:8px;"><strong>Keywords:</strong> metadata, schema, crawler, catalog</div>
+</div>
+<div class="card cp" style="padding:16px;">
+<div class="card-title" style="font-size:11px;">Glue DataBrew</div>
+<ul class="bl">
+<li>Visual data cleaning (no-code)</li>
+<li>250+ built-in transform recipes</li>
+<li>Data profiling: column statistics, missing value detection</li>
+<li>Designed for data analysts (non-engineers)</li>
+<li>Output to S3 / Redshift</li>
+</ul>
+<div class="tip" style="margin-top:8px;"><strong>Keywords:</strong> no-code, visual, recipe, data profile</div>
+</div>
+</div>
+<div class="alert"><strong>Glue ETL vs DataBrew vs EMR:</strong> Code-based large-scale Spark → Glue ETL; Visual no-code cleaning → DataBrew; Need full Hadoop ecosystem/custom framework/long-running cluster → EMR.</div>
+</div>
+
+<div class="grid-2">
+<div class="card cg" id="sc19" style="position:relative"><button class="sp-card" id="btn-sc19" onclick="event.stopPropagation();speakCard(this,'sc19')" title="Read aloud">🔊</button>
+<div class="card-title" id="sc20" style="position:relative"><button class="sp-card" id="btn-sc20" onclick="event.stopPropagation();speakCard(this,'sc20')" title="Read aloud">🔊</button>File Format Selection (Exam Favorite)</div>
+<table class="ct">
+<tr><th>Format</th><th>Type</th><th>Best For</th><th>Exam Signal</th></tr>
+<tr><td class="hl">Parquet</td><td>Columnar</td><td>Athena/Redshift analytical queries</td><td><span class="kw g">reduce cost</span> <span class="kw">analytics</span></td></tr>
+<tr><td class="hl">ORC</td><td>Columnar</td><td>Hive/Spark on EMR</td><td><span class="kw">EMR Hive</span></td></tr>
+<tr><td class="hl">Avro</td><td>Row-based</td><td>Schema evolution, Kafka messages</td><td><span class="kw c">schema evolution</span> <span class="kw">Kafka</span></td></tr>
+<tr><td class="hl">JSON/CSV</td><td>Row-based</td><td>Raw ingestion (needs conversion)</td><td><span class="kw r">raw ingestion</span></td></tr>
+</table>
+<div class="tip"><strong>Exam Tip:</strong> Analytical queries → Parquet (reduce scan volume, save cost); Messages/schema changes → Avro; Raw ingestion → JSON/CSV, then convert.</div>
+</div>
+<div class="card co" id="sc21" style="position:relative"><button class="sp-card" id="btn-sc21" onclick="event.stopPropagation();speakCard(this,'sc21')" title="Read aloud">🔊</button>
+<div class="card-title" id="sc22" style="position:relative"><button class="sp-card" id="btn-sc22" onclick="event.stopPropagation();speakCard(this,'sc22')" title="Read aloud">🔊</button>AWS DMS Data Migration</div>
+<ul class="kv">
+<li><span class="kk">Full Load</span><span class="kval">One-time migration of historical data, done during business downtime</span></li>
+<li><span class="kk">CDC (Ongoing)</span><span class="kval">Captures source DB changes, continuously syncs to target (e.g., Redshift)</span></li>
+<li><span class="kk">Homogeneous</span><span class="kval">MySQL→MySQL, DMS alone is sufficient</span></li>
+<li><span class="kk">Heterogeneous</span><span class="kval">Oracle→Aurora, requires SCT to convert Schema + DMS for data migration</span></li>
+<li><span class="kk">Replication Instance</span><span class="kval">DMS compute node — choose appropriate size</span></li>
+<li><span class="kk">Common Targets</span><span class="kval">Redshift / S3 / DynamoDB / Aurora / OpenSearch</span></li>
+</ul>
+<div class="tip"><strong>DEA High-Frequency Scenarios:</strong> on-premises DB → Redshift (DMS CDC continuous sync); Oracle → Aurora (SCT + DMS combination).</div>
+</div>
+</div>
+</div>
+
+<!-- Domain 2 Storage -->
+<div id="tab-store" class="tab-content">
+<div class="sec-title">🗄️ Domain 2: Data Store Management <span class="tag">26%</span></div>
+<div class="full-card" id="sc23" style="position:relative"><button class="sp-card" id="btn-sc23" onclick="event.stopPropagation();speakCard(this,'sc23')" title="Read aloud">🔊</button>
+<div class="card-title" id="sc24" style="position:relative"><button class="sp-card" id="btn-sc24" onclick="event.stopPropagation();speakCard(this,'sc24')" title="Read aloud">🔊</button>Core Storage Service Selection Matrix</div>
+<table class="ct">
+<tr><th>Use Case</th><th>Recommended Service</th><th>Reason</th><th>Exam Keywords</th></tr>
+<tr><td>Complex analytical queries (OLAP)</td><td class="hl">Redshift</td><td>Columnar MPP, PB-scale warehouse</td><td><span class="kw">data warehouse</span> <span class="kw c">OLAP</span></td></tr>
+<tr><td>Data lake (raw + processed)</td><td class="hl">S3 + Glue Catalog</td><td>Unlimited scale, on-demand queries, low cost</td><td><span class="kw">data lake</span> <span class="kw g">raw data</span></td></tr>
+<tr><td>High-frequency point queries (NoSQL)</td><td class="hl">DynamoDB</td><td>Millisecond latency, auto-scaling</td><td><span class="kw">low latency</span> <span class="kw c">key-value</span></td></tr>
+<tr><td>Relational + transactions</td><td class="hl">RDS / Aurora</td><td>ACID, SQL, OLTP</td><td><span class="kw">OLTP</span> <span class="kw c">transactional</span></td></tr>
+<tr><td>Full-text search + log analytics</td><td class="hl">OpenSearch</td><td>Full-text search, Kibana visualization</td><td><span class="kw">search</span> <span class="kw c">log analytics</span></td></tr>
+<tr><td>Serverless SQL queries on S3</td><td class="hl">Athena</td><td>Pay per scan, no cluster needed</td><td><span class="kw">serverless</span> <span class="kw c">pay per query</span></td></tr>
+<tr><td>Redshift + S3 hybrid queries</td><td class="hl">Redshift Spectrum</td><td>Query S3 without importing, External Table</td><td><span class="kw">federated query</span> <span class="kw c">external table</span></td></tr>
+</table>
+</div>
+
+<div class="full-card" id="sc25" style="position:relative"><button class="sp-card" id="btn-sc25" onclick="event.stopPropagation();speakCard(this,'sc25')" title="Read aloud">🔊</button>
+<div class="card-title" id="sc26" style="position:relative"><button class="sp-card" id="btn-sc26" onclick="event.stopPropagation();speakCard(this,'sc26')" title="Read aloud">🔊</button>Redshift Deep Dive</div>
+<div class="grid-2">
+<div>
+<h3>Distribution Style</h3>
+<ul class="kv">
+<li><span class="kk">AUTO</span><span class="kval">Automatic selection: small tables use ALL, large tables use KEY. Recommended for beginners.</span></li>
+<li><span class="kk">EVEN</span><span class="kval">Round-robin even distribution. For non-Join scenarios, prevents data skew.</span></li>
+<li><span class="kk">KEY</span><span class="kval">Distribute by specified column. Same column values land on same node during Join, reducing network transfer.</span></li>
+<li><span class="kk">ALL</span><span class="kval">Full copy on each node. Suitable for small dimension tables (Join optimization).</span></li>
+</ul>
+<div class="tip"><strong>Classic Large Table Join Pattern:</strong> Large table uses KEY (customer_id), small dimension table uses ALL → Co-located Join with zero network transfer.</div>
+</div>
+<div>
+<h3>Other Key Features</h3>
+<ul class="kv">
+<li><span class="kk">Sort Key</span><span class="kval">Determines data order on disk, accelerates range queries</span></li>
+<li><span class="kk">WLM</span><span class="kval">Workload Management: allocates query resources by user group</span></li>
+<li><span class="kk">COPY Command</span><span class="kval">Batch load from S3 — fastest method (parallel)</span></li>
+<li><span class="kk">UNLOAD</span><span class="kval">Export Redshift → S3, can specify Parquet format</span></li>
+<li><span class="kk">Materialized Views</span><span class="kval">Pre-computed results, accelerates repeated aggregation queries</span></li>
+<li><span class="kk">Spectrum</span><span class="kval">Query S3 external tables, hot/cold data separation architecture</span></li>
+<li><span class="kk">Serverless</span><span class="kval">Billed by RPU-hour, no cluster management needed</span></li>
+</ul>
+</div>
+</div>
+</div>
+
+<div class="grid-2">
+<div class="card" id="sc27" style="position:relative"><button class="sp-card" id="btn-sc27" onclick="event.stopPropagation();speakCard(this,'sc27')" title="Read aloud">🔊</button>
+<div class="card-title" id="sc28" style="position:relative"><button class="sp-card" id="btn-sc28" onclick="event.stopPropagation();speakCard(this,'sc28')" title="Read aloud">🔊</button>Athena Query Optimization (Cost + Performance)</div>
+<ul class="kv">
+<li><span class="kk">Use Parquet/ORC</span><span class="kval">Columnar format, only scans needed columns — most effective cost reduction</span></li>
+<li><span class="kk">Partitioning</span><span class="kval">Partition by year/month/day; WHERE clause skips irrelevant partitions</span></li>
+<li><span class="kk">CTAS</span><span class="kval">Write query results as a new Parquet table, speeds up subsequent queries</span></li>
+<li><span class="kk">Workgroup</span><span class="kval">Controls scan limit per team, prevents budget overruns</span></li>
+<li><span class="kk">Federated Query</span><span class="kval">Cross-data-source queries (RDS/DynamoDB) via Lambda Connector</span></li>
+<li><span class="kk">MSCK REPAIR TABLE</span><span class="kval">Updates Glue Catalog partitions so Athena can discover new partitions</span></li>
+</ul>
+<div class="tip"><strong>Athena bills per GB scanned:</strong> Parquet + Partitioning = the optimal combination for cost savings and speed.</div>
+</div>
+<div class="card cc" id="sc29" style="position:relative"><button class="sp-card" id="btn-sc29" onclick="event.stopPropagation();speakCard(this,'sc29')" title="Read aloud">🔊</button>
+<div class="card-title" id="sc30" style="position:relative"><button class="sp-card" id="btn-sc30" onclick="event.stopPropagation();speakCard(this,'sc30')" title="Read aloud">🔊</button>Lake Formation Access Control</div>
+<ul class="kv">
+<li><span class="kk">Data Catalog</span><span class="kval">Unified metadata (populated by Glue Crawler)</span></li>
+<li><span class="kk">Database-level Grant</span><span class="kval">Grant a role access to an entire database</span></li>
+<li><span class="kk">Table-level Grant</span><span class="kval">Grant a role access to specific tables</span></li>
+<li><span class="kk">Column Filter</span><span class="kval">Hide or mask certain columns for specific roles (PII protection)</span></li>
+<li><span class="kk">Row Filter</span><span class="kval">Show only rows matching a condition for specific roles</span></li>
+<li><span class="kk">IAM + LF Dual Check</span><span class="kval">Both must allow access — if either denies, access fails</span></li>
+</ul>
+<div class="alert"><strong>Lake Formation Permission Model:</strong> IAM Policy AND Lake Formation Grant must both be satisfied! Configuring only one is not enough.</div>
+</div>
+</div>
+</div>
+
+<!-- Domain 3 Operations -->
+<div id="tab-ops" class="tab-content">
+<div class="sec-title">⚙️ Domain 3: Data Operations &amp; Support <span class="tag">22%</span></div>
+<div class="full-card" id="sc31" style="position:relative"><button class="sp-card" id="btn-sc31" onclick="event.stopPropagation();speakCard(this,'sc31')" title="Read aloud">🔊</button>
+<div class="card-title" id="sc32" style="position:relative"><button class="sp-card" id="btn-sc32" onclick="event.stopPropagation();speakCard(this,'sc32')" title="Read aloud">🔊</button>Pipeline Orchestration Tool Comparison</div>
+<table class="ct">
+<tr><th>Service</th><th>Purpose</th><th>Programming Model</th><th>Best For</th><th>Keywords</th></tr>
+<tr><td class="hl">Step Functions</td><td>AWS-native workflow</td><td>JSON state machine (ASL)</td><td>Orchestrate Lambda/Glue/ECS with error handling and retries</td><td><span class="kw">orchestrate</span> <span class="kw c">state machine</span> <span class="kw g">retry/catch</span></td></tr>
+<tr><td class="hl">MWAA (Airflow)</td><td>Managed Airflow</td><td>Python DAG</td><td>Complex dependency scheduling, existing Airflow teams</td><td><span class="kw">DAG</span> <span class="kw c">Python</span> <span class="kw">complex dependency</span></td></tr>
+<tr><td class="hl">EventBridge</td><td>Event-driven trigger</td><td>Rules/CRON</td><td>Scheduled Glue Job triggering, S3 event triggers</td><td><span class="kw">schedule</span> <span class="kw c">event-driven</span> <span class="kw">cron</span></td></tr>
+<tr><td class="hl">Glue Workflow</td><td>Glue-specific pipeline</td><td>Glue Job DAG</td><td>Dependency orchestration between Glue Jobs</td><td><span class="kw">Glue jobs</span> <span class="kw c">trigger</span></td></tr>
+</table>
+<div class="tip"><strong>Selection Logic:</strong> Pure AWS service orchestration with error handling → Step Functions; Existing Airflow → MWAA; Simple scheduled trigger → EventBridge; Between Glue Jobs → Glue Workflow.</div>
+</div>
+
+<div class="grid-2">
+<div class="card cp" id="sc33" style="position:relative"><button class="sp-card" id="btn-sc33" onclick="event.stopPropagation();speakCard(this,'sc33')" title="Read aloud">🔊</button>
+<div class="card-title" id="sc34" style="position:relative"><button class="sp-card" id="btn-sc34" onclick="event.stopPropagation();speakCard(this,'sc34')" title="Read aloud">🔊</button>Data Pipeline Monitoring Key Metrics</div>
+<ul class="kv">
+<li><span class="kk">Glue Job</span><span class="kval">CloudWatch Logs for details; DPU utilization; glue.driver.aggregate.numFailedTasks</span></li>
+<li><span class="kk">Kinesis Streams</span><span class="kval">IteratorAgeMilliseconds (consumer lag); WriteProvisionedThroughputExceeded (write throttling)</span></li>
+<li><span class="kk">Redshift</span><span class="kval">STL_QUERY for query history; STL_LOAD_ERRORS for load errors; WLM queue wait time</span></li>
+<li><span class="kk">EMR</span><span class="kval">Ganglia UI for cluster resources; step failure CloudWatch Alarm</span></li>
+<li><span class="kk">Alarm Response</span><span class="kval">CloudWatch Alarm → SNS (notification) or Lambda (auto-remediation)</span></li>
+<li><span class="kk">Audit Logs</span><span class="kval">CloudTrail → S3 → Athena analysis (who accessed what data)</span></li>
+</ul>
+</div>
+<div class="card cg" id="sc35" style="position:relative"><button class="sp-card" id="btn-sc35" onclick="event.stopPropagation();speakCard(this,'sc35')" title="Read aloud">🔊</button>
+<div class="card-title" id="sc36" style="position:relative"><button class="sp-card" id="btn-sc36" onclick="event.stopPropagation();speakCard(this,'sc36')" title="Read aloud">🔊</button>Common Troubleshooting</div>
+<table class="ct">
+<tr><th>Symptom</th><th>Solution</th></tr>
+<tr><td>Glue Job OOM</td><td>Increase DPU; use salting to address data skew; repartition</td></tr>
+<tr><td>Kinesis consumer lag</td><td>Increase Shard count (Resharding); increase consumer parallelism</td></tr>
+<tr><td>Redshift slow queries</td><td>ANALYZE to update statistics; VACUUM to resort data; check EXPLAIN plan</td></tr>
+<tr><td>Athena high scan volume</td><td>Convert to Parquet; add partitions; MSCK REPAIR TABLE</td></tr>
+<tr><td>DMS replication lag</td><td>Upgrade Replication Instance; check network bandwidth</td></tr>
+<tr><td>EMR task failure</td><td>Spot reclaimed — switch to On-Demand; increase executor.memory</td></tr>
+</table>
+</div>
+</div>
+</div>
+
+<!-- Domain 4 Security -->
+<div id="tab-security" class="tab-content">
+<div class="sec-title">🔐 Domain 4: Data Security &amp; Governance <span class="tag">18%</span></div>
+<div class="full-card" id="sc37" style="position:relative"><button class="sp-card" id="btn-sc37" onclick="event.stopPropagation();speakCard(this,'sc37')" title="Read aloud">🔊</button>
+<div class="card-title" id="sc38" style="position:relative"><button class="sp-card" id="btn-sc38" onclick="event.stopPropagation();speakCard(this,'sc38')" title="Read aloud">🔊</button>Data Encryption Overview (At Rest + In Transit)</div>
+<div class="grid-2">
+<div>
+<h3>Encryption at Rest</h3>
+<table class="ct">
+<tr><th>Service</th><th>Encryption Method</th><th>Key</th></tr>
+<tr><td>S3</td><td>SSE-S3 / SSE-KMS / SSE-C</td><td>AWS-managed / CMK / Customer-provided</td></tr>
+<tr><td>Redshift</td><td>KMS or HSM</td><td>CMK, cluster level</td></tr>
+<tr><td>DynamoDB</td><td>Default SSE, KMS optional</td><td>AWS-managed or CMK</td></tr>
+<tr><td>Glue</td><td>Security Configuration</td><td>S3 encryption + CloudWatch Logs</td></tr>
+<tr><td>Kinesis</td><td>Server-side KMS</td><td>CMK, Shard level</td></tr>
+<tr><td>EMR</td><td>EMRFS + EBS encryption</td><td>KMS CMK</td></tr>
+</table>
+</div>
+<div>
+<h3>Encryption in Transit</h3>
+<ul class="kv">
+<li><span class="kk">S3</span><span class="kval">HTTPS (TLS); Bucket Policy can enforce HTTPS</span></li>
+<li><span class="kk">Redshift</span><span class="kval">SSL/TLS; JDBC/ODBC connections enforce SSL</span></li>
+<li><span class="kk">Kinesis</span><span class="kval">HTTPS API; VPC Endpoint for private access</span></li>
+<li><span class="kk">Glue → RDS</span><span class="kval">JDBC SSL connection</span></li>
+<li><span class="kk">EMR → S3</span><span class="kval">EMRFS over HTTPS</span></li>
+</ul>
+<div class="tip"><strong>Exam Pattern:</strong> "In-transit encryption" = SSL/TLS/HTTPS; "At-rest encryption" = KMS CMK; Complete security solution = both required.</div>
+<h3>PII Detection and Masking</h3>
+<ul class="kv">
+<li><span class="kk">Macie</span><span class="kval">Auto-scans S3, identifies PII (names/credit cards/SSNs)</span></li>
+<li><span class="kk">Lake Formation</span><span class="kval">Column-level filtering, hides PII columns from specific roles</span></li>
+<li><span class="kk">Redshift DDM</span><span class="kval">Dynamic Data Masking — different users see different masking levels</span></li>
+<li><span class="kk">DataBrew Recipe</span><span class="kval">Hash/mask/replace PII fields during cleaning</span></li>
+</ul>
+</div>
+</div>
+</div>
+
+<div class="grid-2">
+<div class="card co" id="sc39" style="position:relative"><button class="sp-card" id="btn-sc39" onclick="event.stopPropagation();speakCard(this,'sc39')" title="Read aloud">🔊</button>
+<div class="card-title" id="sc40" style="position:relative"><button class="sp-card" id="btn-sc40" onclick="event.stopPropagation();speakCard(this,'sc40')" title="Read aloud">🔊</button>Data Access Control Layers</div>
+<div class="tr" style="border-left:3px solid var(--red);">
+<div class="tl">SCP (Organizations)</div><div class="tu">Account-level highest restriction — all services constrained</div>
+</div>
+<div class="tr" style="border-left:3px solid var(--orange);">
+<div class="tl">IAM Role / Policy</div><div class="tu">Service/user level (Glue/EMR/Lambda use Role)</div>
+</div>
+<div class="tr" style="border-left:3px solid var(--yellow);">
+<div class="tl">Lake Formation Grant</div><div class="tu">Data lake fine-grained: database/table/column/row level</div>
+</div>
+<div class="tr" style="border-left:3px solid var(--teal);">
+<div class="tl">Redshift RLS</div><div class="tu">Row-level security policy — different users see different data sets</div>
+</div>
+<div class="tr" style="border-left:3px solid var(--cyan);">
+<div class="tl">S3 Bucket Policy</div><div class="tu">Bucket-level access control</div>
+</div>
+</div>
+<div class="card cp" id="sc41" style="position:relative"><button class="sp-card" id="btn-sc41" onclick="event.stopPropagation();speakCard(this,'sc41')" title="Read aloud">🔊</button>
+<div class="card-title" id="sc42" style="position:relative"><button class="sp-card" id="btn-sc42" onclick="event.stopPropagation();speakCard(this,'sc42')" title="Read aloud">🔊</button>Audit &amp; Compliance</div>
+<ul class="kv">
+<li><span class="kk">CloudTrail</span><span class="kval">Audit logs for all AWS API calls; stored in S3, analyzed with Athena</span></li>
+<li><span class="kk">AWS Config</span><span class="kval">Tracks resource config changes; Config Rules auto-detect non-compliance</span></li>
+<li><span class="kk">Redshift Audit</span><span class="kval">Detailed logs of user logins, queries, deletions, etc.</span></li>
+<li><span class="kk">S3 Access Logs</span><span class="kval">S3 object-level access records</span></li>
+<li><span class="kk">Data Sovereignty</span><span class="kval">SCP to prevent cross-region replication; S3 Block Public Access</span></li>
+<li><span class="kk">VPC Endpoint</span><span class="kval">Private access for Glue/Kinesis/S3 — data never traverses public internet</span></li>
+</ul>
+</div>
+</div>
+</div>
+
+<!-- Services Quick Reference -->
+<div id="tab-services" class="tab-content">
+<div class="sec-title">🛠️ Core Services Quick Reference</div>
+<div class="full-card" id="sc43" style="position:relative"><button class="sp-card" id="btn-sc43" onclick="event.stopPropagation();speakCard(this,'sc43')" title="Read aloud">🔊</button>
+<div class="card-title" id="sc44" style="position:relative"><button class="sp-card" id="btn-sc44" onclick="event.stopPropagation();speakCard(this,'sc44')" title="Read aloud">🔊</button>All Core Services Overview</div>
+<div class="grid-2">
+<div>
+<h3>ETL / Data Processing</h3>
+<table class="ct">
+<tr><th>Service</th><th>Characteristics</th><th>Choose When</th></tr>
+<tr><td class="hl">Glue ETL</td><td>Serverless Spark</td><td>Large-scale ETL, code-based, incremental processing</td></tr>
+<tr><td class="hl">DataBrew</td><td>Visual no-code</td><td>Analysts cleaning data, 250+ recipes</td></tr>
+<tr><td class="hl">EMR</td><td>Full Hadoop/Spark cluster</td><td>Custom frameworks, PB-scale, long-running clusters</td></tr>
+<tr><td class="hl">Lambda</td><td>Serverless functions</td><td>Small transforms, event-triggered, &lt;15 minutes</td></tr>
+</table>
+<h3 style="margin-top:16px;">Stream Processing</h3>
+<table class="ct">
+<tr><th>Service</th><th>Characteristics</th><th>Choose When</th></tr>
+<tr><td class="hl">Kinesis Streams</td><td>Real-time, replayable, Shard</td><td>Custom consumers, need data replay</td></tr>
+<tr><td class="hl">Kinesis Firehose</td><td>Fully managed, direct loading</td><td>No-code load to S3/Redshift</td></tr>
+<tr><td class="hl">MSK (Kafka)</td><td>Managed Kafka</td><td>Migrating existing Kafka apps to cloud</td></tr>
+<tr><td class="hl">Kinesis Flink</td><td>Stream SQL / Flink</td><td>Real-time aggregation, window computations</td></tr>
+</table>
+</div>
+<div>
+<h3>Storage &amp; Query</h3>
+<table class="ct">
+<tr><th>Service</th><th>Characteristics</th><th>Choose When</th></tr>
+<tr><td class="hl">S3</td><td>Object storage, data lake</td><td>Raw/processed data, low cost</td></tr>
+<tr><td class="hl">Redshift</td><td>Columnar MPP warehouse</td><td>OLAP, complex analytical queries</td></tr>
+<tr><td class="hl">Athena</td><td>Serverless SQL on S3</td><td>Ad-hoc queries, no cluster needed</td></tr>
+<tr><td class="hl">DynamoDB</td><td>NoSQL, millisecond latency</td><td>High-frequency point queries, key-value</td></tr>
+<tr><td class="hl">OpenSearch</td><td>Full-text search + analytics</td><td>Log analytics, search engine</td></tr>
+</table>
+<h3 style="margin-top:16px;">Governance / Orchestration</h3>
+<table class="ct">
+<tr><th>Service</th><th>Use</th></tr>
+<tr><td class="hl">Lake Formation</td><td>Data lake fine-grained permissions (column/row level)</td></tr>
+<tr><td class="hl">Glue Data Catalog</td><td>Unified metadata, Crawler auto-scan</td></tr>
+<tr><td class="hl">Step Functions</td><td>Workflow orchestration with error handling and retries</td></tr>
+<tr><td class="hl">MWAA</td><td>Managed Airflow, Python DAG</td></tr>
+<tr><td class="hl">Data Exchange</td><td>Subscribe to third-party datasets</td></tr>
+</table>
+</div>
+</div>
+</div>
+
+<div class="full-card" id="sc45" style="position:relative"><button class="sp-card" id="btn-sc45" onclick="event.stopPropagation();speakCard(this,'sc45')" title="Read aloud">🔊</button>
+<div class="card-title" id="sc46" style="position:relative"><button class="sp-card" id="btn-sc46" onclick="event.stopPropagation();speakCard(this,'sc46')" title="Read aloud">🔊</button>EMR Cluster Configuration Key Points</div>
+<div class="grid-3">
+<div>
+<h3>Node Types</h3>
+<ul class="kv">
+<li><span class="kk">Master Node</span><span class="kval">Manages cluster, YARN/HDFS NameNode — must be On-Demand</span></li>
+<li><span class="kk">Core Node</span><span class="kval">Runs tasks + stores HDFS — prefer On-Demand</span></li>
+<li><span class="kk">Task Node</span><span class="kval">Runs tasks only, no HDFS storage — can use Spot (save 90%)</span></li>
+</ul>
+</div>
+<div>
+<h3>Storage Options</h3>
+<ul class="kv">
+<li><span class="kk">EMRFS (S3)</span><span class="kval">Recommended: persistent, data survives cluster termination</span></li>
+<li><span class="kk">HDFS (Local)</span><span class="kval">High performance but temporary — data lost when cluster terminates</span></li>
+<li><span class="kk">EBS</span><span class="kval">Local disk for intermediate computation results</span></li>
+</ul>
+</div>
+<div>
+<h3>Cost Optimization</h3>
+<ul class="kv">
+<li><span class="kk">Transient Cluster</span><span class="kval">Auto-terminate after task completes, pay only for active hours</span></li>
+<li><span class="kk">Task Node Spot</span><span class="kval">Use Spot for Task Nodes to save 70–90%</span></li>
+<li><span class="kk">Instance Fleet</span><span class="kval">Mix multiple instance types to improve Spot availability</span></li>
+</ul>
+</div>
+</div>
+<div class="alert"><strong>EMR Task Node Spot is Best Practice:</strong> Task Nodes don't store HDFS data — if Spot is reclaimed, only the task retries; data is safely in S3 (EMRFS).</div>
+</div>
+</div>
+
+<!-- Keywords -->
+<div id="tab-keywords" class="tab-content">
+<div class="sec-title">🎯 Exam Keywords Quick Reference</div>
+<div class="grid-2">
+<div class="card" id="sc47" style="position:relative"><button class="sp-card" id="btn-sc47" onclick="event.stopPropagation();speakCard(this,'sc47')" title="Read aloud">🔊</button>
+<div class="card-title" id="sc48" style="position:relative"><button class="sp-card" id="btn-sc48" onclick="event.stopPropagation();speakCard(this,'sc48')" title="Read aloud">🔊</button>📥 Ingestion / ETL</div>
+<ul class="kv">
+<li><span class="kk"><span class="kw">real-time streaming</span></span><span class="kval">Kinesis Data Streams (not Firehose)</span></li>
+<li><span class="kk"><span class="kw">load to S3/Redshift</span></span><span class="kval">Kinesis Firehose (near real-time, no-code)</span></li>
+<li><span class="kk"><span class="kw">existing Kafka</span></span><span class="kval">MSK (managed Kafka, keep existing code)</span></li>
+<li><span class="kk"><span class="kw">large-scale ETL</span></span><span class="kval">Glue ETL Job (Serverless Spark)</span></li>
+<li><span class="kk"><span class="kw">no-code data prep</span></span><span class="kval">Glue DataBrew (visual transforms)</span></li>
+<li><span class="kk"><span class="kw">incremental load</span></span><span class="kval">Glue Job Bookmark (prevents duplicate processing)</span></li>
+<li><span class="kk"><span class="kw">SaaS data source</span></span><span class="kval">AppFlow (Salesforce/SAP → S3)</span></li>
+<li><span class="kk"><span class="kw">CSV → Parquet</span></span><span class="kval">Glue ETL format conversion (reduces Athena scan volume)</span></li>
+<li><span class="kk"><span class="kw">heterogeneous DB</span></span><span class="kval">SCT (Schema conversion) + DMS (data migration)</span></li>
+<li><span class="kk"><span class="kw">stream SQL window</span></span><span class="kval">Kinesis Data Analytics (Flink)</span></li>
+</ul>
+</div>
+<div class="card cc" id="sc49" style="position:relative"><button class="sp-card" id="btn-sc49" onclick="event.stopPropagation();speakCard(this,'sc49')" title="Read aloud">🔊</button>
+<div class="card-title" id="sc50" style="position:relative"><button class="sp-card" id="btn-sc50" onclick="event.stopPropagation();speakCard(this,'sc50')" title="Read aloud">🔊</button>🗄️ Storage / Query</div>
+<ul class="kv">
+<li><span class="kk"><span class="kw">data warehouse OLAP</span></span><span class="kval">Redshift (columnar MPP, PB-scale analytics)</span></li>
+<li><span class="kk"><span class="kw">serverless SQL on S3</span></span><span class="kval">Athena (billed by scan volume)</span></li>
+<li><span class="kk"><span class="kw">data lake governance</span></span><span class="kval">Lake Formation (fine-grained permissions + Catalog)</span></li>
+<li><span class="kk"><span class="kw">query S3 no load</span></span><span class="kval">Redshift Spectrum (External Table)</span></li>
+<li><span class="kk"><span class="kw">metadata schema</span></span><span class="kval">Glue Data Catalog + Crawler</span></li>
+<li><span class="kk"><span class="kw">log search full-text</span></span><span class="kval">OpenSearch (Kibana visualization)</span></li>
+<li><span class="kk"><span class="kw">high-frequency key-value</span></span><span class="kval">DynamoDB (millisecond latency)</span></li>
+<li><span class="kk"><span class="kw">third-party dataset</span></span><span class="kval">AWS Data Exchange (subscribe to external data)</span></li>
+<li><span class="kk"><span class="kw">Athena scan expensive</span></span><span class="kval">Convert to Parquet + add partitions + Workgroup limit</span></li>
+<li><span class="kk"><span class="kw">Redshift slow join</span></span><span class="kval">Large table KEY Distribution, small table ALL Distribution</span></li>
+</ul>
+</div>
+</div>
+<div class="grid-2">
+<div class="card cp" id="sc51" style="position:relative"><button class="sp-card" id="btn-sc51" onclick="event.stopPropagation();speakCard(this,'sc51')" title="Read aloud">🔊</button>
+<div class="card-title" id="sc52" style="position:relative"><button class="sp-card" id="btn-sc52" onclick="event.stopPropagation();speakCard(this,'sc52')" title="Read aloud">🔊</button>⚙️ Operations / Orchestration</div>
+<ul class="kv">
+<li><span class="kk"><span class="kw">orchestrate with retry</span></span><span class="kval">Step Functions (state machine with Retry/Catch)</span></li>
+<li><span class="kk"><span class="kw">complex Python DAG</span></span><span class="kval">MWAA / Managed Airflow</span></li>
+<li><span class="kk"><span class="kw">schedule cron</span></span><span class="kval">EventBridge Scheduler → triggers Glue/Lambda</span></li>
+<li><span class="kk"><span class="kw">Kinesis consumer lag</span></span><span class="kval">IteratorAgeMilliseconds↑ → add Shards</span></li>
+<li><span class="kk"><span class="kw">Glue job slow/OOM</span></span><span class="kval">Increase DPU; check data skew; partition pruning</span></li>
+<li><span class="kk"><span class="kw">data quality rules</span></span><span class="kval">Glue Data Quality (DQ rules embedded in ETL)</span></li>
+<li><span class="kk"><span class="kw">EMR cost reduce</span></span><span class="kval">Task Node Spot + Transient Cluster</span></li>
+<li><span class="kk"><span class="kw">no duplicate processing</span></span><span class="kval">Glue Job Bookmark (incremental processing)</span></li>
+</ul>
+</div>
+<div class="card co" id="sc53" style="position:relative"><button class="sp-card" id="btn-sc53" onclick="event.stopPropagation();speakCard(this,'sc53')" title="Read aloud">🔊</button>
+<div class="card-title" id="sc54" style="position:relative"><button class="sp-card" id="btn-sc54" onclick="event.stopPropagation();speakCard(this,'sc54')" title="Read aloud">🔊</button>🔐 Security / Governance</div>
+<ul class="kv">
+<li><span class="kk"><span class="kw">column-level access</span></span><span class="kval">Lake Formation Column Filter</span></li>
+<li><span class="kk"><span class="kw">find PII in S3</span></span><span class="kval">Macie (auto-scans and identifies sensitive data)</span></li>
+<li><span class="kk"><span class="kw">encrypt at rest CMK</span></span><span class="kval">SSE-KMS (Customer Managed Key)</span></li>
+<li><span class="kk"><span class="kw">audit API calls</span></span><span class="kval">CloudTrail → Athena analysis</span></li>
+<li><span class="kk"><span class="kw">compliance config</span></span><span class="kval">AWS Config (config change tracking + rules)</span></li>
+<li><span class="kk"><span class="kw">data masking</span></span><span class="kval">Redshift DDM / DataBrew Recipe</span></li>
+<li><span class="kk"><span class="kw">private no internet</span></span><span class="kval">VPC Endpoint (Glue/Kinesis/S3)</span></li>
+<li><span class="kk"><span class="kw">row-level access</span></span><span class="kval">Lake Formation Row Filter / Redshift RLS</span></li>
+</ul>
+</div>
+</div>
+</div>
+
+<!-- Practice Quiz -->
+<div id="tab-quiz" class="tab-content">
+<div class="sec-title">📝 Practice Quiz <span class="tag">Categorized by Exam Domain · Click to Reveal Explanation</span></div>
+<div class="sdis">
+<div class="snum" id="scoreNum">0 / 0</div>
+<div style="color:var(--text3);font-size:13px;letter-spacing:1px;">SCORE · Click an option to auto-score</div>
+<div style="margin-top:12px;"><div class="pbar"><div class="pfill" id="progressFill" style="width:0%"></div></div></div>
+<button onclick="resetQuiz()" style="background:rgba(0,201,167,0.12);border:1px solid rgba(0,201,167,0.3);color:var(--teal);padding:8px 20px;border-radius:6px;cursor:pointer;font-size:13px;font-family:'Inter',sans-serif;">Reset Quiz</button>
+</div>
+
+<div class="qcard" id="q1"><div class="qnum">Q01 · Domain 1 Real-Time Stream Processing</div>
+<div class="qq">An e-commerce platform needs to analyze user clickstreams in real time (50,000 events/second), compute the top 10 trending products per minute, and write results to DynamoDB for API queries. What is the most appropriate architecture?</div>
+<ul class="qopts">
+<li class="qopt" onclick="ans(this,'A','q1','C')"><span class="ol">A</span>Kinesis Firehose → S3 → Glue ETL (triggered hourly) → DynamoDB</li>
+<li class="qopt" onclick="ans(this,'B','q1','C')"><span class="ol">B</span>SQS → Lambda (triggered every minute) → DynamoDB</li>
+<li class="qopt" onclick="ans(this,'C','q1','C')"><span class="ol">C</span>Kinesis Data Streams → Kinesis Data Analytics (Flink) window aggregation → Lambda → DynamoDB</li>
+<li class="qopt" onclick="ans(this,'D','q1','C')"><span class="ol">D</span>MSK → EMR Spark Streaming → Redshift</li>
+</ul>
+<div class="qexp" id="exp-q1"><strong>✓ Answer: C</strong><br><br>Requirements: real-time processing (millisecond-level) + window aggregation (top 10 per minute) + low-latency queries (DynamoDB).<br>Kinesis Data Streams ingests high-throughput real-time data → Kinesis Data Analytics (Flink) performs sliding window aggregation → Lambda writes to DynamoDB.<br><br><strong>A is wrong:</strong> Firehose has a 60s buffer; Glue triggered hourly is not real-time<br><strong>B is wrong:</strong> SQS cannot do streaming window aggregation; Lambda periodic trigger is not real-time<br><strong>D is wrong:</strong> MSK + EMR is heavy; Redshift is not suitable for API low-latency point queries</div>
+</div>
+
+<div class="qcard" id="q2"><div class="qnum">Q02 · Domain 1 Format Optimization</div>
+<div class="qq">A large number of JSON logs are stored in S3. Athena queries are slow and expensive. Analysts query only the last 7 days of data each day. How can you most effectively reduce cost and improve speed?</div>
+<ul class="qopts">
+<li class="qopt" onclick="ans(this,'A','q2','D')"><span class="ol">A</span>Move JSON files to S3 Express One Zone</li>
+<li class="qopt" onclick="ans(this,'B','q2','D')"><span class="ol">B</span>Increase the Athena Workgroup scan limit</li>
+<li class="qopt" onclick="ans(this,'C','q2','D')"><span class="ol">C</span>Load data into Redshift for queries</li>
+<li class="qopt" onclick="ans(this,'D','q2','D')"><span class="ol">D</span>Use Glue ETL to convert JSON to Parquet and store in S3 partitioned by date</li>
+</ul>
+<div class="qexp" id="exp-q2"><strong>✓ Answer: D</strong><br><br>Two key optimizations: Parquet (columnar format, only scans needed columns) + date partitioning (querying 7 days scans only 7 directories). This is the most effective way to reduce Athena cost.<br><br><strong>A is wrong:</strong> S3 Express One Zone doesn't reduce Athena scan volume<br><strong>B is wrong:</strong> Increasing the limit allows more scanning — not cost-saving<br><strong>C is wrong:</strong> Redshift requires cluster maintenance; cost may not be lower</div>
+</div>
+
+<div class="qcard" id="q3"><div class="qnum">Q03 · Domain 1 Incremental Processing</div>
+<div class="qq">A Glue ETL Job runs every hour and reads all files from S3. As data grows, the Job gets slower and re-processes already-processed files. How can you solve the duplicate processing problem with minimal changes?</div>
+<ul class="qopts">
+<li class="qopt" onclick="ans(this,'A','q3','B')"><span class="ol">A</span>Record a timestamp in code and filter out old files</li>
+<li class="qopt" onclick="ans(this,'B','q3','B')"><span class="ol">B</span>Enable Glue Job Bookmark</li>
+<li class="qopt" onclick="ans(this,'C','q3','B')"><span class="ol">C</span>Move processed files to a different S3 path</li>
+<li class="qopt" onclick="ans(this,'D','q3','B')"><span class="ol">D</span>Switch to DynamoDB Streams trigger</li>
+</ul>
+<div class="qexp" id="exp-q3"><strong>✓ Answer: B</strong><br><br>Glue Job Bookmark is a native Glue feature that records the last successfully processed position and automatically continues from that checkpoint on the next run. It's a one-click configuration change — minimal modification.<br><br><strong>A is wrong:</strong> Writing timestamp logic yourself is feasible but more code changes and error-prone<br><strong>C is wrong:</strong> Moving files breaks data lake structure and introduces complexity<br><strong>D is wrong:</strong> DynamoDB Streams doesn't match an S3 file processing scenario</div>
+</div>
+
+<div class="qcard" id="q4"><div class="qnum">Q04 · Domain 2 Storage Selection</div>
+<div class="qq">A financial company needs: ① store 10 years of historical transaction data; ② analysts run complex SQL reports daily; ③ data scientists occasionally query raw data; ④ minimize cost. What is the most appropriate architecture?</div>
+<ul class="qopts">
+<li class="qopt" onclick="ans(this,'A','q4','C')"><span class="ol">A</span>Store everything in RDS MySQL with regular backups to S3</li>
+<li class="qopt" onclick="ans(this,'B','q4','C')"><span class="ol">B</span>Store everything in Redshift Serverless</li>
+<li class="qopt" onclick="ans(this,'C','q4','C')"><span class="ol">C</span>Raw data in S3 (Parquet + partitioned); hot data loaded to Redshift; analysts use Redshift; data scientists use Athena to query S3</li>
+<li class="qopt" onclick="ans(this,'D','q4','C')"><span class="ol">D</span>Store everything in DynamoDB with Lambda aggregation</li>
+</ul>
+<div class="qexp" id="exp-q4"><strong>✓ Answer: C</strong><br><br>Classic Lakehouse architecture: S3 data lake (low cost, Parquet-optimized) + Redshift (high-performance reporting for analysts) + Athena (on-demand S3 queries for data scientists, serverless savings). Redshift Spectrum also lets Redshift query cold S3 data.<br><br><strong>A is wrong:</strong> RDS MySQL is OLTP — not suitable for complex analytics; 10 years of data would exceed its limits<br><strong>B is wrong:</strong> Storing everything in Redshift has high storage cost<br><strong>D is wrong:</strong> DynamoDB is not suitable for complex SQL aggregations</div>
+</div>
+
+<div class="qcard" id="q5"><div class="qnum">Q05 · Domain 2 Redshift Optimization</div>
+<div class="qq">A Redshift cluster has an orders table (10 billion rows) and a customers table (1 million rows) that are frequently JOINed. Queries are slow due to heavy network data transfer. How should you optimize the Distribution Style?</div>
+<ul class="qopts">
+<li class="qopt" onclick="ans(this,'A','q5','D')"><span class="ol">A</span>Use EVEN Distribution for both orders and customers</li>
+<li class="qopt" onclick="ans(this,'B','q5','D')"><span class="ol">B</span>Add more Redshift cluster nodes</li>
+<li class="qopt" onclick="ans(this,'C','q5','D')"><span class="ol">C</span>Merge both tables into one wide table</li>
+<li class="qopt" onclick="ans(this,'D','q5','D')"><span class="ol">D</span>KEY Distribution (customer_id) for orders; ALL Distribution for customers</li>
+</ul>
+<div class="qexp" id="exp-q5"><strong>✓ Answer: D</strong><br><br>Large table orders uses KEY (customer_id) → orders with the same customer_id land on the same node; small dimension table customers uses ALL → every node has a full copy. JOINs happen on the same node (Co-located Join), zero network transfer.<br><br><strong>A is wrong:</strong> EVEN distribution causes heavy network transfer during JOINs<br><strong>B is wrong:</strong> Adding nodes increases capacity but doesn't fix the Distribution design problem<br><strong>C is wrong:</strong> Merging into a wide table causes data redundancy and maintenance complexity</div>
+</div>
+
+<div class="qcard" id="q6"><div class="qnum">Q06 · Domain 3 Pipeline Orchestration</div>
+<div class="qq">An ETL pipeline needs: ① extract from RDS; ② Glue transform; ③ load to Redshift; ④ Lambda data quality check; ⑤ SNS alert and stop if quality fails. Error handling and retries are required between steps. Which orchestration service is most appropriate?</div>
+<ul class="qopts">
+<li class="qopt" onclick="ans(this,'A','q6','B')"><span class="ol">A</span>EventBridge scheduled triggers, each step independently triggering the next</li>
+<li class="qopt" onclick="ans(this,'B','q6','B')"><span class="ol">B</span>AWS Step Functions — define a state machine with error handling and retry logic</li>
+<li class="qopt" onclick="ans(this,'C','q6','B')"><span class="ol">C</span>Glue Workflow chaining all steps</li>
+<li class="qopt" onclick="ans(this,'D','q6','B')"><span class="ol">D</span>Lambda chain calls</li>
+</ul>
+<div class="qexp" id="exp-q6"><strong>✓ Answer: B</strong><br><br>Step Functions is designed for stateful workflows: supports all AWS services (Glue/Lambda/SNS); native Retry and Catch error handling; Catch on failure → transition to SNS notification state; visual workflow diagram.<br><br><strong>A is wrong:</strong> EventBridge has no built-in step state management or error handling<br><strong>C is wrong:</strong> Glue Workflow can only orchestrate Glue components — Lambda and SNS cannot be included<br><strong>D is wrong:</strong> Lambda chaining is tightly coupled, 15-minute timeout, no error state management</div>
+</div>
+
+<div class="qcard" id="q7"><div class="qnum">Q07 · Domain 3 Monitoring &amp; Troubleshooting</div>
+<div class="qq">A Kinesis Data Streams IteratorAgeMilliseconds metric has been continuously rising for over an hour — consumers can't keep up with producers. How do you resolve this?</div>
+<ul class="qopts">
+<li class="qopt" onclick="ans(this,'A','q7','C')"><span class="ol">A</span>Replace Kinesis Data Streams with SQS FIFO</li>
+<li class="qopt" onclick="ans(this,'B','q7','C')"><span class="ol">B</span>Increase Kinesis Data Streams data retention to 7 days</li>
+<li class="qopt" onclick="ans(this,'C','q7','C')"><span class="ol">C</span>Increase the number of Shards (Resharding) and increase consumer parallelism</li>
+<li class="qopt" onclick="ans(this,'D','q7','C')"><span class="ol">D</span>Replace Kinesis Streams with Kinesis Firehose</li>
+</ul>
+<div class="qexp" id="exp-q7"><strong>✓ Answer: C</strong><br><br>Rising IteratorAgeMilliseconds = consumption rate &lt; production rate → data backlog. Solution: increase Shard count (raises throughput limit; each Shard: 1MB/s write, 2MB/s read) + increase consumer thread parallelism.<br><br><strong>A is wrong:</strong> SQS FIFO has throughput limits (300 TPS), unsuitable for high-throughput streaming<br><strong>B is wrong:</strong> Retention time only affects how long data is kept — does not solve consumption speed issues<br><strong>D is wrong:</strong> Firehose is no-code loading; it cannot resolve custom consumer backlog problems</div>
+</div>
+
+<div class="qcard" id="q8"><div class="qnum">Q08 · Domain 4 Data Governance</div>
+<div class="qq">An S3 data lake has a user table with PII fields (email, phone). Data engineers can see all columns; analysts can only see masked versions. Both teams query the same Glue Catalog table via Athena. How do you implement this?</div>
+<ul class="qopts">
+<li class="qopt" onclick="ans(this,'A','q8','C')"><span class="ol">A</span>Create two Athena Workgroups, one for each team</li>
+<li class="qopt" onclick="ans(this,'B','q8','C')"><span class="ol">B</span>Create two copies of the S3 data (one with PII, one masked), one for each team</li>
+<li class="qopt" onclick="ans(this,'C','q8','C')"><span class="ol">C</span>Use Lake Formation Column Filter for the analyst role to hide or mask PII columns</li>
+<li class="qopt" onclick="ans(this,'D','q8','C')"><span class="ol">D</span>Give analysts an IAM Policy that denies reading S3 paths containing PII</li>
+</ul>
+<div class="qexp" id="exp-q8"><strong>✓ Answer: C</strong><br><br>Lake Formation supports column-level access control: engineer role gets Grant on ALL columns; analyst role gets Grant on specified columns (excluding PII) or column-level data masking. Only one copy of data exists in S3; visibility is controlled at the query layer.<br><br><strong>A is wrong:</strong> Workgroups control resource and scan limits — not column-level data access<br><strong>B is wrong:</strong> Duplicate data is redundant, syncing is complex, and cost is high<br><strong>D is wrong:</strong> S3-path-level IAM is too coarse — cannot do column-level differentiation</div>
+</div>
+
+<div class="qcard" id="q9"><div class="qnum">Q09 · Domain 1 Database Migration</div>
+<div class="qq">An on-premises Oracle database (2TB) needs to migrate to Aurora PostgreSQL with no more than 1 hour of downtime. What is the most appropriate migration approach?</div>
+<ul class="qopts">
+<li class="qopt" onclick="ans(this,'A','q9','D')"><span class="ol">A</span>Export Oracle data directly with pg_dump, then pg_restore to Aurora</li>
+<li class="qopt" onclick="ans(this,'B','q9','D')"><span class="ol">B</span>Shut down, use Snowball to move data to S3, then import from S3 to Aurora</li>
+<li class="qopt" onclick="ans(this,'C','q9','D')"><span class="ol">C</span>Use only AWS DMS full-load migration</li>
+<li class="qopt" onclick="ans(this,'D','q9','D')"><span class="ol">D</span>SCT converts Schema, DMS full load + CDC ongoing replication, then cut over when lag is near zero (under 1 hour)</li>
+</ul>
+<div class="qexp" id="exp-q9"><strong>✓ Answer: D</strong><br><br>Oracle → Aurora PostgreSQL is a heterogeneous migration. Standard process: SCT converts DDL/stored procedures → DMS full load (business runs normally) → DMS CDC syncs ongoing changes → cut over when CDC lag approaches zero. Total downtime can be kept under 1 hour.<br><br><strong>A is wrong:</strong> pg_dump does not support Oracle; 2TB requires lengthy downtime<br><strong>B is wrong:</strong> Snowball transfer requires downtime during shipment<br><strong>C is wrong:</strong> Full load only — business keeps running during migration, so there will be data inconsistency at cutover without CDC</div>
+</div>
+
+<div class="qcard" id="q10"><div class="qnum">Q10 · Domain 4 Encryption &amp; Compliance</div>
+<div class="qq">S3 stores financial data. Compliance requirements: ① encrypted at rest and keys controlled by the company (auditable and revocable); ② data in transit must also be encrypted. Which configuration should you choose?</div>
+<ul class="qopts">
+<li class="qopt" onclick="ans(this,'A','q10','C')"><span class="ol">A</span>SSE-S3 + HTTP access</li>
+<li class="qopt" onclick="ans(this,'B','q10','C')"><span class="ol">B</span>SSE-S3 + enforce HTTPS Bucket Policy</li>
+<li class="qopt" onclick="ans(this,'C','q10','C')"><span class="ol">C</span>SSE-KMS (Customer Managed CMK) + enforce HTTPS Bucket Policy</li>
+<li class="qopt" onclick="ans(this,'D','q10','C')"><span class="ol">D</span>Client-side encryption + HTTP access</li>
+</ul>
+<div class="qexp" id="exp-q10"><strong>✓ Answer: C</strong><br><br>Company controls keys → SSE-KMS with Customer Managed CMK (CloudTrail records key usage; you can disable the CMK to revoke access — SSE-S3 keys are fully AWS-managed, which doesn't satisfy this requirement). Transit encryption → enforce HTTPS via Bucket Policy (Deny aws:SecureTransport=false).<br><br><strong>A is wrong:</strong> SSE-S3 keys are AWS-managed; HTTP is plaintext in transit<br><strong>B is wrong:</strong> SSE-S3 does not satisfy the "company controls keys" requirement<br><strong>D is wrong:</strong> HTTP leaves metadata and request headers unencrypted</div>
+</div>
+
+<div class="qcard" id="q11"><div class="qnum">Q11 · Domain 3 EMR Cost Optimization (Multi-Select)</div>
+<div class="qq">EMR runs Spark batch processing every night (~4 hours), processing S3 data and writing results back to S3. The cluster is idle during the day. How can you maximize cost savings? (Select 2)</div>
+<ul class="qopts">
+<li class="qopt" onclick="ans(this,'A','q11','BD')"><span class="ol">A</span>Use an always-on cluster to avoid nightly restart time</li>
+<li class="qopt" onclick="ans(this,'B','q11','BD')"><span class="ol">B</span>Use a Transient cluster that auto-terminates after the job completes</li>
+<li class="qopt" onclick="ans(this,'C','q11','BD')"><span class="ol">C</span>Purchase Reserved Instances for all nodes (Master/Core/Task)</li>
+<li class="qopt" onclick="ans(this,'D','q11','BD')"><span class="ol">D</span>Use Spot Instances for Task Nodes, On-Demand for Core Nodes, store data in S3 (EMRFS)</li>
+</ul>
+<div class="qexp" id="exp-q11"><strong>✓ Answer: B + D</strong><br><br>B (Transient Cluster): auto-shuts down after task completes, paying only for 4 active hours — no charge for daytime idle.<br>D (Task Node Spot): Task Nodes don't store HDFS data, so if Spot is reclaimed the task simply retries, with data safely in S3. Saves 70–90% on compute cost.<br><br><strong>A is wrong:</strong> Always-on cluster charges during daytime idle — very wasteful<br><strong>C is wrong:</strong> Buying RIs for a cluster used only nightly is not cost-effective (RIs are suited for 24/7 workloads)</div>
+</div>
+
+<div class="qcard" id="q12"><div class="qnum">Q12 · Domain 2 Third-Party Data</div>
+<div class="qq">A financial company needs to integrate third-party market data (stock prices, economic indicators) into their S3+Athena analytics platform. The third party provides data via a subscription API. Minimize operational overhead. How do you implement this?</div>
+<ul class="qopts">
+<li class="qopt" onclick="ans(this,'A','q12','C')"><span class="ol">A</span>Write a Lambda function to periodically call the third-party API and save results to S3</li>
+<li class="qopt" onclick="ans(this,'B','q12','C')"><span class="ol">B</span>Have the third party push directly to your Kinesis Data Streams</li>
+<li class="qopt" onclick="ans(this,'C','q12','C')"><span class="ol">C</span>Use AWS Data Exchange to subscribe to the third-party dataset with automatic delivery to S3</li>
+<li class="qopt" onclick="ans(this,'D','q12','C')"><span class="ol">D</span>Use AWS Transfer Family to pull files from the third party via SFTP</li>
+</ul>
+<div class="qexp" id="exp-q12"><strong>✓ Answer: C</strong><br><br>AWS Data Exchange is AWS's data marketplace offering thousands of third-party datasets (financial/weather/medical/etc.). After subscribing, data is automatically delivered to S3 on a schedule — no API call code to maintain. Natively integrates with S3 + Athena + Redshift. Optimal for "minimum operational overhead."<br><br><strong>A is wrong:</strong> Writing Lambda requires maintaining code, error handling, retries — high operational overhead<br><strong>B is wrong:</strong> Requires third-party support and complex security configuration<br><strong>D is wrong:</strong> Transfer Family is for SFTP/FTP file transfer — the scenario is about API data subscription</div>
+</div>
+
+</div>
+</div>
+
+<script>
+function sw(name,btn){
+  document.querySelectorAll('.tab-content').forEach(t=>t.classList.remove('active'));
+  document.querySelectorAll('.tab-btn').forEach(b=>b.classList.remove('active'));
+  document.getElementById('tab-'+name).classList.add('active');
+  if(btn)btn.classList.add('active');
+}
+let score=0,answered=0;
+const total=12;
+function ans(el,chosen,qid,correct){
+  const card=document.getElementById(qid);
+  if(card.dataset.answered)return;
+  card.dataset.answered='true';
+  const opts=card.querySelectorAll('.qopt');
+  opts.forEach(o=>{
+    o.style.pointerEvents='none';
+    const letter=o.querySelector('.ol').textContent;
+    if(correct.includes(letter))o.classList.add('correct');
+    else if(chosen===letter&&!correct.includes(letter))o.classList.add('wrong');
+  });
+  if(correct.includes(chosen))score++;
+  answered++;
+  document.getElementById('exp-'+qid).classList.add('show');
+  document.getElementById('scoreNum').textContent=score+' / '+answered;
+  document.getElementById('progressFill').style.width=(answered/total*100)+'%';
+}
+function resetQuiz(){
+  score=0;answered=0;
+  document.getElementById('scoreNum').textContent='0 / 0';
+  document.getElementById('progressFill').style.width='0%';
+  document.querySelectorAll('.qcard').forEach(c=>{
+    delete c.dataset.answered;
+    c.querySelectorAll('.qopt').forEach(o=>{o.classList.remove('correct','wrong');o.style.pointerEvents='';});
+    const exp=c.querySelector('.qexp');
+    if(exp)exp.classList.remove('show');
+  });
+}
+</script>
+
+<script>
+// ── Google TTS — US English Female ──────────────────────────────────
+var _spBtn = null, _spQueue = [], _spAudio = null;
+
+function _chunk(text, max) {
+  var sents = text.match(/[^.!?]+[.!?]+|[^.!?]+$/g) || [text];
+  var chunks = [], cur = '';
+  for (var i = 0; i < sents.length; i++) {
+    if ((cur + sents[i]).length > max) { if (cur) chunks.push(cur.trim()); cur = sents[i]; }
+    else cur += sents[i];
+  }
+  if (cur.trim()) chunks.push(cur.trim());
+  return chunks.filter(function(c){ return c.length > 0; });
+}
+
+function _url(t) {
+  return 'https://translate.google.com/translate_tts?ie=UTF-8&q='
+    + encodeURIComponent(t) + '&tl=en-US&client=tw-ob';
+}
+
+function _stop() {
+  _spQueue = [];
+  if (_spAudio) { _spAudio.pause(); _spAudio.src = ''; _spAudio = null; }
+}
+
+function _play(btn) {
+  if (!_spQueue.length) { _resetBtn(btn); _spBtn = null; return; }
+  var a = new Audio(_spQueue.shift()); _spAudio = a;
+  a.onended = function(){ _spAudio = null; _play(btn); };
+  a.onerror = function(){ _spAudio = null; _play(btn); };
+  a.play().catch(function(){ _spAudio = null; _play(btn); });
+}
+
+function speakCard(btn, cardId) {
+  if (_spBtn === btn) { _stop(); _resetBtn(btn); _spBtn = null; return; }
+  if (_spBtn) { _stop(); _resetBtn(_spBtn); _spBtn = null; }
+  var el = document.getElementById(cardId);
+  if (!el) return;
+  // Get text, strip the button label itself
+  var text = el.innerText
+    .replace(/^🔊\s*/,'')
+    .replace(/■\s*Stop/g,'')
+    .replace(/\s+/g,' ')
+    .trim();
+  if (!text) return;
+  _spQueue = _chunk(text, 190).map(_url);
+  _spBtn = btn;
+  btn.innerHTML = '■ Stop';
+  btn.classList.add('playing');
+  _play(btn);
+}
+
+function _resetBtn(btn) {
+  if (!btn) return;
+  btn.innerHTML = '🔊';
+  btn.classList.remove('playing');
+}
+</script>
+</body>
+</html>
