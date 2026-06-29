@@ -1,0 +1,672 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Financial Report Analyzer — Project Overview</title>
+<style>
+:root {
+  --bg: #F8F9FB;
+  --white: #FFFFFF;
+  --border: #E3E6EE;
+  --text: #111827;
+  --dim: #4B5563;
+  --faint: #9CA3AF;
+  --teal: #0891B2; --teal-bg: #ECFEFF; --teal-bd: #A5F3FC;
+  --blue: #2563EB; --blue-bg: #EFF6FF; --blue-bd: #BFDBFE;
+  --green:#059669; --green-bg:#ECFDF5; --green-bd:#6EE7B7;
+  --amber:#D97706; --amber-bg:#FFFBEB; --amber-bd:#FCD34D;
+  --violet:#7C3AED;--violet-bg:#F5F3FF;--violet-bd:#C4B5FD;
+  --red:  #DC2626; --red-bg:  #FEF2F2; --red-bd:  #FCA5A5;
+  --coral:#C2410C; --coral-bg:#FFF7ED; --coral-bd:#FED7AA;
+}
+*{box-sizing:border-box;margin:0;padding:0;}
+body{background:var(--bg);color:var(--text);font-family:-apple-system,'Segoe UI',sans-serif;font-size:15px;line-height:1.7;padding:32px 20px 80px;max-width:860px;margin:0 auto;}
+
+/* ── NAV ── */
+.nav{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:32px;padding-bottom:16px;border-bottom:1px solid var(--border);}
+.nav-btn{font-size:12px;font-weight:600;padding:6px 14px;border-radius:20px;border:1px solid var(--border);background:var(--white);color:var(--dim);cursor:pointer;transition:all .15s;}
+.nav-btn:hover{background:var(--text);color:#fff;border-color:var(--text);}
+.nav-btn.active{background:var(--text);color:#fff;border-color:var(--text);}
+
+/* ── PAGES ── */
+.page{display:none;}
+.page.active{display:block;}
+
+/* ── PAGE HEADER ── */
+.ph{margin-bottom:28px;}
+.ph-eyebrow{font-size:11px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--faint);margin-bottom:8px;}
+.ph h1{font-size:26px;font-weight:700;letter-spacing:-.02em;margin-bottom:8px;}
+.ph p{font-size:14px;color:var(--dim);}
+
+/* ── SPEAK BUTTON ── */
+.sp{display:inline-flex;align-items:center;gap:4px;font-size:11px;font-weight:600;padding:3px 9px;border-radius:5px;border:1px solid var(--teal-bd);background:var(--teal-bg);color:var(--teal);cursor:pointer;margin-top:6px;transition:all .15s;white-space:nowrap;vertical-align:middle;}
+.sp:hover{background:var(--teal);color:#fff;}
+.sp.playing{background:var(--red-bg);color:var(--red);border-color:var(--red-bd);}
+
+/* ── SECTION ── */
+.sec{margin-bottom:36px;}
+.sec-title{font-size:13px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--faint);margin-bottom:14px;display:flex;align-items:center;gap:8px;}
+.sec-title .dot{width:7px;height:7px;border-radius:50%;}
+
+/* ── TEXT BLOCKS ── */
+.block{background:var(--white);border:1px solid var(--border);border-radius:10px;padding:16px 18px;margin-bottom:10px;}
+.block p{color:var(--dim);font-size:14px;line-height:1.7;margin-bottom:4px;}
+.block-title{font-size:14px;font-weight:600;color:var(--text);margin-bottom:6px;}
+
+/* ── PIPELINE STEPS ── */
+.pipe{display:grid;gap:10px;margin-bottom:10px;}
+.pipe-step{background:var(--white);border:1px solid var(--border);border-radius:10px;padding:14px 16px;display:flex;gap:14px;align-items:flex-start;}
+.pipe-num{width:28px;height:28px;border-radius:50%;background:var(--text);color:#fff;font-size:12px;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:1px;}
+.pipe-body{}
+.pipe-label{font-size:11px;font-weight:700;letter-spacing:.07em;text-transform:uppercase;margin-bottom:4px;}
+.pipe-title{font-size:14px;font-weight:600;color:var(--text);margin-bottom:3px;}
+.pipe-desc{font-size:13px;color:var(--dim);line-height:1.6;}
+
+/* ── METRICS ROW ── */
+.metrics{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:16px;}
+.metric{background:var(--white);border:1px solid var(--border);border-radius:8px;padding:12px 16px;text-align:center;min-width:120px;flex:1;}
+.metric-val{font-size:22px;font-weight:700;color:var(--text);}
+.metric-label{font-size:11px;color:var(--faint);margin-top:2px;}
+
+/* ── QA CARDS ── */
+.qa-card{background:var(--white);border:1px solid var(--border);border-radius:10px;margin-bottom:10px;overflow:hidden;}
+.qa-top{display:flex;align-items:stretch;min-height:64px;cursor:pointer;user-select:none;}
+.qa-top:hover{background:#FAFBFC;}
+.qa-icon{width:56px;min-width:56px;display:flex;align-items:center;justify-content:center;font-size:22px;background:var(--bg);border-right:1px solid var(--border);}
+.qa-q{flex:1;padding:12px 14px;display:flex;flex-direction:column;justify-content:center;gap:3px;}
+.qa-q-text{font-size:14px;font-weight:600;line-height:1.35;}
+.qa-tag{font-size:10px;font-weight:700;letter-spacing:.07em;text-transform:uppercase;padding:2px 7px;border-radius:4px;display:inline-block;width:fit-content;}
+.qa-chev{padding:0 14px;display:flex;align-items:center;color:var(--faint);font-size:11px;transition:transform .2s;}
+.qa-card.open .qa-chev{transform:rotate(180deg);}
+.qa-body{display:none;border-top:1px solid var(--border);padding:14px 16px 10px;}
+.qa-card.open .qa-body{display:block;}
+.qa-answer{font-size:14px;color:var(--dim);line-height:1.7;}
+.qa-answer p{margin-bottom:8px;}
+
+/* ── PROBLEM CARDS ── */
+.prob-card{background:var(--white);border:1px solid var(--border);border-radius:10px;margin-bottom:10px;overflow:hidden;}
+.prob-card.open .prob-body{display:block;}
+.prob-head{display:flex;align-items:center;gap:12px;padding:14px 16px;cursor:pointer;user-select:none;}
+.prob-head:hover{background:#FAFBFC;}
+.prob-badge{font-size:10px;font-weight:700;letter-spacing:.07em;text-transform:uppercase;padding:3px 9px;border-radius:4px;white-space:nowrap;}
+.prob-title{font-size:14px;font-weight:600;flex:1;}
+.prob-chev{font-size:11px;color:var(--faint);transition:transform .2s;}
+.prob-card.open .prob-chev{transform:rotate(180deg);}
+.prob-body{display:none;border-top:1px solid var(--border);padding:14px 16px 10px;}
+.prob-section{margin-bottom:12px;}
+.prob-section-label{font-size:11px;font-weight:700;letter-spacing:.07em;text-transform:uppercase;margin-bottom:6px;}
+.prob-text{font-size:13.5px;color:var(--dim);line-height:1.65;}
+
+/* ── NOTICE ── */
+.notice{font-size:12px;color:var(--dim);background:var(--teal-bg);border:1px solid var(--teal-bd);border-radius:7px;padding:9px 14px;margin-bottom:20px;}
+
+/* colour tags */
+.t-blue{background:var(--blue-bg);color:var(--blue);}
+.t-teal{background:var(--teal-bg);color:var(--teal);}
+.t-green{background:var(--green-bg);color:var(--green);}
+.t-amber{background:var(--amber-bg);color:var(--amber);}
+.t-violet{background:var(--violet-bg);color:var(--violet);}
+.t-red{background:var(--red-bg);color:var(--red);}
+.t-coral{background:var(--coral-bg);color:var(--coral);}
+
+.bl-blue{border-left:3px solid var(--blue);background:var(--blue-bg);}
+.bl-green{border-left:3px solid var(--green);background:var(--green-bg);}
+.bl-amber{border-left:3px solid var(--amber);background:var(--amber-bg);}
+.bl-red{border-left:3px solid var(--red);background:var(--red-bg);}
+.bl-violet{border-left:3px solid var(--violet);background:var(--violet-bg);}
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<div class="nav">
+  <button class="nav-btn active" onclick="showPage('overview',this)">Overview</button>
+  <button class="nav-btn" onclick="showPage('pipeline',this)">Pipeline</button>
+  <button class="nav-btn" onclick="showPage('model',this)">ML Model</button>
+  <button class="nav-btn" onclick="showPage('qa',this)">Q&A</button>
+  <button class="nav-btn" onclick="showPage('problems',this)">Challenges</button>
+</div>
+
+<!-- ══ PAGE: OVERVIEW ══ -->
+<div class="page active" id="overview">
+  <div class="ph">
+    <div class="ph-eyebrow">6Estates · DBS, Credit Suisse, BCA</div>
+    <h1>Financial Report Analyzer</h1>
+    <p>End-to-end AWS pipeline that ingests annual and quarterly PDF reports, extracts ~3,000 sentences using Amazon Textract, and applies a two-stage NLP system to identify the top-3 supporting sentences per financial metric — complete with confidence scores.</p>
+  </div>
+
+  <div class="notice">🔊 Requires internet. Open in Chrome locally for audio. Click any 🔊 button to hear that paragraph read aloud.</div>
+
+  <!-- Key metrics -->
+  <div class="metrics">
+    <div class="metric"><div class="metric-val">0.797</div><div class="metric-label">Accuracy</div></div>
+    <div class="metric"><div class="metric-val">0.737</div><div class="metric-label">Macro F1</div></div>
+    <div class="metric"><div class="metric-val">~3,000</div><div class="metric-label">Sentences / report</div></div>
+    <div class="metric"><div class="metric-val">3,000→100→3</div><div class="metric-label">Retrieval funnel</div></div>
+  </div>
+
+  <!-- What this project does -->
+  <div class="sec">
+    <div class="sec-title"><span class="dot" style="background:var(--blue)"></span><span style="color:var(--blue)">What it does</span></div>
+
+    <div class="block bl-blue" id="ov1">
+      <div class="block-title">Problem being solved</div>
+      <p>Analysts at DBS, Credit Suisse, and BCA spend hours manually reading annual reports to extract evidence for each financial metric — revenue, EBITDA, depreciation, and so on. This system automates that process end-to-end: a PDF goes in, a structured analysis report with cited supporting sentences and page references comes out.</p>
+      <button class="sp" onclick="speakEl(this,'ov1')">🔊 Listen</button>
+    </div>
+
+    <div class="block bl-blue" id="ov2">
+      <div class="block-title">Output example</div>
+      <p>For the metric "Sales", the system outputs: the computed value ($232.9 billion, up 30.9% year-over-year), plus the three sentences from the report that best support this figure — each tagged with a page number and a confidence score. For example: "Sales increased 31% in 2017 and 2018" (page 31, score: 0.9883).</p>
+      <button class="sp" onclick="speakEl(this,'ov2')">🔊 Listen</button>
+    </div>
+
+    <div class="block bl-blue" id="ov3">
+      <div class="block-title">Clients and scale</div>
+      <p>Deployed for DBS, Credit Suisse, and BCA. Processes both annual and quarterly reports across multiple companies and years. The pipeline is fully automated — once a PDF is uploaded, no human intervention is required until the final report is ready in S3.</p>
+      <button class="sp" onclick="speakEl(this,'ov3')">🔊 Listen</button>
+    </div>
+  </div>
+
+  <!-- Tech stack -->
+  <div class="sec">
+    <div class="sec-title"><span class="dot" style="background:var(--teal)"></span><span style="color:var(--teal)">AWS services used</span></div>
+
+    <div class="block" id="ov4">
+      <div class="block-title">Data Engineering layer</div>
+      <p>API Gateway receives PDF uploads. S3 stores raw PDFs and processed Parquet files, partitioned by company and year. Amazon Textract extracts structured text from the PDF — approximately 3,000 sentences per report. OpenSearch indexes all sentences for full-text BM25 search in Stage 1. Step Functions orchestrates the two-stage NLP pipeline, running all financial metrics in parallel with a concurrency limit of 5. Lambda functions handle each individual processing step. Results are assembled by a final Lambda and written back to S3 as both a markdown report and a structured JSON file.</p>
+      <button class="sp" onclick="speakEl(this,'ov4')">🔊 Listen</button>
+    </div>
+
+    <div class="block" id="ov5">
+      <div class="block-title">Machine Learning layer</div>
+      <p>A Keras BiLSTM text classifier trained on financial report sentences. The trained model is packaged as a tar.gz file, uploaded to S3, and deployed as a SageMaker Endpoint using TensorFlowModel. Inference runs on an ml.m5.xlarge CPU instance — no GPU required for BiLSTM inference at this scale. Lambda calls the endpoint via invoke_endpoint, passing 100 candidate sentences and receiving confidence scores back.</p>
+      <button class="sp" onclick="speakEl(this,'ov5')">🔊 Listen</button>
+    </div>
+
+    <div class="block" id="ov6">
+      <div class="block-title">Infrastructure as code</div>
+      <p>Terraform manages the S3 buckets, IAM roles with least-privilege permissions, Lambda function deployments, the S3-to-Lambda trigger, and the Step Functions state machine. The SageMaker endpoint is deployed separately via the SageMaker Python SDK, since model updates happen independently of infrastructure changes.</p>
+      <button class="sp" onclick="speakEl(this,'ov6')">🔊 Listen</button>
+    </div>
+  </div>
+</div>
+
+<!-- ══ PAGE: PIPELINE ══ -->
+<div class="page" id="pipeline">
+  <div class="ph">
+    <div class="ph-eyebrow">System Design</div>
+    <h1>End-to-end pipeline</h1>
+    <p>Six stages, fully automated. A PDF goes in — a structured analysis report comes out.</p>
+  </div>
+
+  <div class="pipe">
+    <div class="pipe-step" id="pl1">
+      <div class="pipe-num">1</div>
+      <div class="pipe-body">
+        <div class="pipe-label" style="color:var(--blue)">Ingestion</div>
+        <div class="pipe-title">API Gateway → S3 raw bucket</div>
+        <div class="pipe-desc">User uploads a PDF via the web API. API Gateway validates the request and the ingestion Lambda writes the file to S3 with metadata — company name, year, and report type (annual or quarterly) embedded in the S3 key path.</div>
+        <button class="sp" onclick="speakEl(this,'pl1')">🔊 Listen</button>
+      </div>
+    </div>
+
+    <div class="pipe-step" id="pl2">
+      <div class="pipe-num">2</div>
+      <div class="pipe-body">
+        <div class="pipe-label" style="color:var(--teal)">Parsing</div>
+        <div class="pipe-title">Amazon Textract → ~3,000 sentences</div>
+        <div class="pipe-desc">An S3 ObjectCreated event triggers the parsing Lambda. It calls Amazon Textract to extract all text blocks from the PDF — typically around 3,000 sentences per annual report. Each sentence is tagged with its page number and a Textract confidence score. Results are written to S3 in Parquet format (partitioned by company and year) and bulk-indexed into OpenSearch for Stage 1 retrieval.</div>
+        <button class="sp" onclick="speakEl(this,'pl2')">🔊 Listen</button>
+      </div>
+    </div>
+
+    <div class="pipe-step" id="pl3">
+      <div class="pipe-num">3</div>
+      <div class="pipe-body">
+        <div class="pipe-label" style="color:var(--amber)">Stage 1 — Keyword Retrieval</div>
+        <div class="pipe-title">OpenSearch BM25 + TF-IDF → 100 candidates</div>
+        <div class="pipe-desc">For each financial metric — sales, EBITDA, depreciation, interest expense, and so on — Stage 1 runs a BM25 full-text search against OpenSearch using a predefined keyword dictionary. The initial results are then re-ranked using TF-IDF cosine similarity within Lambda. This narrows approximately 3,000 sentences down to 100 high-probability candidates per metric. Step Functions runs all metrics in parallel with a concurrency limit of 5.</div>
+        <button class="sp" onclick="speakEl(this,'pl3')">🔊 Listen</button>
+      </div>
+    </div>
+
+    <div class="pipe-step" id="pl4">
+      <div class="pipe-num">4</div>
+      <div class="pipe-body">
+        <div class="pipe-label" style="color:var(--violet)">Stage 2 — Text Classification</div>
+        <div class="pipe-title">SageMaker Endpoint (Keras BiLSTM) → Top-3</div>
+        <div class="pipe-desc">The Stage 2 Lambda sends the 100 candidate sentences to the SageMaker Endpoint, which hosts the trained Keras BiLSTM classifier. The model assigns each sentence a probability of being "highly relevant" to the target metric. The Lambda sorts by confidence score and returns the top 3 — each with its sentence text, page number, and probability score. Accuracy 0.797, Macro F1 0.737.</div>
+        <button class="sp" onclick="speakEl(this,'pl4')">🔊 Listen</button>
+      </div>
+    </div>
+
+    <div class="pipe-step" id="pl5">
+      <div class="pipe-num">5</div>
+      <div class="pipe-body">
+        <div class="pipe-label" style="color:var(--green)">Assembly</div>
+        <div class="pipe-title">Top-3 + field values → report.md + result.json</div>
+        <div class="pipe-desc">The assembly Lambda collects the Top-3 supporting sentences for every metric along with the computed financial values — for example, Sales equals $232.9 billion, up 30.9% year-over-year. It merges these into two output formats: a structured JSON file matching the internal token schema, and a human-readable markdown report with computed values, directional language, and cited evidence sentences including page numbers and scores.</div>
+        <button class="sp" onclick="speakEl(this,'pl5')">🔊 Listen</button>
+      </div>
+    </div>
+
+    <div class="pipe-step" id="pl6">
+      <div class="pipe-num">6</div>
+      <div class="pipe-body">
+        <div class="pipe-label" style="color:var(--faint)">Storage</div>
+        <div class="pipe-title">S3 processed bucket → analysts</div>
+        <div class="pipe-desc">Both output files are written to the S3 processed bucket, partitioned by company and year. Analysts at DBS, Credit Suisse, and BCA access the final markdown report. The structured JSON is available for downstream systems or further programmatic analysis via Athena.</div>
+        <button class="sp" onclick="speakEl(this,'pl6')">🔊 Listen</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ══ PAGE: ML MODEL ══ -->
+<div class="page" id="model">
+  <div class="ph">
+    <div class="ph-eyebrow">Machine Learning</div>
+    <h1>Keras BiLSTM Classifier</h1>
+    <p>Text classification model that identifies which sentences in a financial report support a given metric movement.</p>
+  </div>
+
+  <div class="sec">
+    <div class="sec-title"><span class="dot" style="background:var(--violet)"></span><span style="color:var(--violet)">Model design</span></div>
+
+    <div class="block bl-violet" id="ml1">
+      <div class="block-title">Architecture</div>
+      <p>Bidirectional LSTM — the model reads each sentence both forward and backward, capturing context from both directions. The embedding layer converts words to dense vectors. The BiLSTM layer produces a hidden representation by concatenating the final forward and backward hidden states. A dropout layer reduces overfitting. The output Dense layer produces probabilities across three classes: not relevant, relevant, and highly relevant.</p>
+      <button class="sp" onclick="speakEl(this,'ml1')">🔊 Listen</button>
+    </div>
+
+    <div class="block bl-violet" id="ml2">
+      <div class="block-title">Training task</div>
+      <p>The model is trained as a three-class sentence classifier. Given a sentence and a target financial metric — for example, "sales" — the model predicts whether the sentence is not relevant, relevant, or highly relevant to explaining the movement of that metric. Training data consisted of manually labelled sentences from historical annual reports across multiple companies and years.</p>
+      <button class="sp" onclick="speakEl(this,'ml2')">🔊 Listen</button>
+    </div>
+
+    <div class="block bl-violet" id="ml3">
+      <div class="block-title">Performance</div>
+      <p>Accuracy 0.797 and Macro F1 0.737 on the held-out test set. Macro F1 is the primary metric because the three classes are not perfectly balanced — highly relevant sentences are rarer than not-relevant ones, so a model that simply predicts the majority class would score well on accuracy but poorly on Macro F1.</p>
+      <button class="sp" onclick="speakEl(this,'ml3')">🔊 Listen</button>
+    </div>
+  </div>
+
+  <div class="sec">
+    <div class="sec-title"><span class="dot" style="background:var(--teal)"></span><span style="color:var(--teal)">Deployment on AWS</span></div>
+
+    <div class="block bl-blue" id="ml4">
+      <div class="block-title">Step 1 — Save and package</div>
+      <p>After training, the Keras model is saved in SavedModel format using model.save(). The vocabulary dictionary — which maps each word to its token index — is saved as a JSON file alongside the model. Both files are packaged into a single tar.gz archive, which is the format SageMaker requires.</p>
+      <button class="sp" onclick="speakEl(this,'ml4')">🔊 Listen</button>
+    </div>
+
+    <div class="block bl-blue" id="ml5">
+      <div class="block-title">Step 2 — inference.py</div>
+      <p>SageMaker requires an inference.py file that defines four functions: model_fn loads the model and vocab from disk when the endpoint starts; input_fn parses the incoming JSON request from Lambda; predict_fn tokenizes the sentences, pads them to a fixed length of 64 tokens, runs them through the BiLSTM, and applies softmax to get class probabilities; output_fn serializes the results back to JSON.</p>
+      <button class="sp" onclick="speakEl(this,'ml5')">🔊 Listen</button>
+    </div>
+
+    <div class="block bl-blue" id="ml6">
+      <div class="block-title">Step 3 — Deploy endpoint</div>
+      <p>The tar.gz is uploaded to S3 using boto3. A TensorFlowModel object is created with the S3 URI, the IAM role, the inference.py entry point, and the TensorFlow framework version. Calling dot deploy() provisions an ml.m5.xlarge instance, downloads the model, starts the inference server, and registers a named endpoint. From that point, Lambda can call invoke_endpoint to send sentences and receive confidence scores.</p>
+      <button class="sp" onclick="speakEl(this,'ml6')">🔊 Listen</button>
+    </div>
+  </div>
+</div>
+
+<!-- ══ PAGE: Q&A ══ -->
+<div class="page" id="qa">
+  <div class="ph">
+    <div class="ph-eyebrow">Interview Prep</div>
+    <h1>Expected Q&A</h1>
+    <p>Likely questions about this project in a Data Engineering or ML interview.</p>
+  </div>
+
+  <!-- DE Questions -->
+  <div class="sec">
+    <div class="sec-title"><span class="dot" style="background:var(--blue)"></span><span style="color:var(--blue)">Data Engineering</span></div>
+
+    <div class="qa-card" onclick="toggleQA(this)">
+      <div class="qa-top">
+        <div class="qa-icon">🗂️</div>
+        <div class="qa-q">
+          <div class="qa-q-text" id="qq1">Why store sentences in OpenSearch and also in S3 Parquet — isn't that redundant?</div>
+          <span class="qa-tag t-blue">Storage</span>
+        </div>
+        <div class="qa-chev">▼</div>
+      </div>
+      <div class="qa-body">
+        <div class="btn-row-qa">
+          <button class="sp" onclick="event.stopPropagation();speakEl(this,'qq1')">🎤 Question</button>
+          <button class="sp" onclick="event.stopPropagation();speakEl(this,'qa1ans')">🔊 Answer</button>
+        </div>
+        <div class="qa-answer" id="qa1ans">
+          <p>They serve completely different purposes. OpenSearch is the retrieval engine for Stage 1 — it runs BM25 full-text search at query time, which requires an inverted index that S3 Parquet cannot provide. S3 Parquet is the long-term analytical store — it lets Athena run SQL aggregations across all documents, partitioned by company and year, at much lower cost than querying OpenSearch for bulk analytics. OpenSearch is optimised for low-latency search; S3 Parquet is optimised for cost-efficient batch analysis. Storing in both is the standard lambda architecture pattern, not redundancy.</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="qa-card" onclick="toggleQA(this)">
+      <div class="qa-top">
+        <div class="qa-icon">⚡</div>
+        <div class="qa-q">
+          <div class="qa-q-text" id="qq2">Why Step Functions instead of just chaining Lambda calls?</div>
+          <span class="qa-tag t-blue">Orchestration</span>
+        </div>
+        <div class="qa-chev">▼</div>
+      </div>
+      <div class="qa-body">
+        <div class="btn-row-qa">
+          <button class="sp" onclick="event.stopPropagation();speakEl(this,'qq2')">🎤 Question</button>
+          <button class="sp" onclick="event.stopPropagation();speakEl(this,'qa2ans')">🔊 Answer</button>
+        </div>
+        <div class="qa-answer" id="qa2ans">
+          <p>Three reasons. First, there are around 11 financial metrics per report, and each metric needs Stage 1 followed by Stage 2. Chaining those inside a single Lambda would hit the 15-minute timeout limit on large reports. Step Functions' Map state runs all metrics in parallel and manages the fan-out automatically. Second, Step Functions provides built-in retry logic — if Stage 2 fails for one metric, it can retry that metric without restarting the entire pipeline. Third, the execution history is fully visible in the AWS console, which makes debugging a failed run much faster than parsing CloudWatch logs from multiple chained Lambda calls.</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="qa-card" onclick="toggleQA(this)">
+      <div class="qa-top">
+        <div class="qa-icon">📦</div>
+        <div class="qa-q">
+          <div class="qa-q-text" id="qq3">Why Parquet and not JSON for the S3 processed bucket?</div>
+          <span class="qa-tag t-blue">Storage format</span>
+        </div>
+        <div class="qa-chev">▼</div>
+      </div>
+      <div class="qa-body">
+        <div class="btn-row-qa">
+          <button class="sp" onclick="event.stopPropagation();speakEl(this,'qq3')">🎤 Question</button>
+          <button class="sp" onclick="event.stopPropagation();speakEl(this,'qa3ans')">🔊 Answer</button>
+        </div>
+        <div class="qa-answer" id="qa3ans">
+          <p>Athena charges per byte scanned. Parquet is columnar, so a query that only reads the "text" and "page" columns does not scan the "confidence" or "word_count" columns at all. Parquet with Snappy compression is typically three to five times smaller than equivalent JSON, which directly reduces Athena query cost. The partition scheme — company equals amazon, year equals 2026 — means a query for one company's one year of data scans only that partition, not the entire dataset. JSON would require scanning every byte of every file for every query regardless of which columns are needed.</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="qa-card" onclick="toggleQA(this)">
+      <div class="qa-top">
+        <div class="qa-icon">🔐</div>
+        <div class="qa-q">
+          <div class="qa-q-text" id="qq4">How is access controlled — who can read the financial reports?</div>
+          <span class="qa-tag t-blue">Security</span>
+        </div>
+        <div class="qa-chev">▼</div>
+      </div>
+      <div class="qa-body">
+        <div class="btn-row-qa">
+          <button class="sp" onclick="event.stopPropagation();speakEl(this,'qq4')">🎤 Question</button>
+          <button class="sp" onclick="event.stopPropagation();speakEl(this,'qa4ans')">🔊 Answer</button>
+        </div>
+        <div class="qa-answer" id="qa4ans">
+          <p>Every Lambda function has its own IAM role with the minimum permissions it needs — the ingestion Lambda can only write to the raw S3 bucket, the parsing Lambda can read the raw bucket and write to the processed bucket, and the Stage 2 Lambda can only invoke the SageMaker endpoint plus read and write its specific S3 paths. No Lambda has wildcard resource permissions. Both S3 buckets block all public access. The SageMaker endpoint is only reachable via the IAM role attached to the Stage 2 Lambda — it is not exposed via a public HTTPS URL.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ML Questions -->
+  <div class="sec">
+    <div class="sec-title"><span class="dot" style="background:var(--violet)"></span><span style="color:var(--violet)">Machine Learning</span></div>
+
+    <div class="qa-card" onclick="toggleQA(this)">
+      <div class="qa-top">
+        <div class="qa-icon">🧠</div>
+        <div class="qa-q">
+          <div class="qa-q-text" id="qq5">Why BiLSTM for this task — why not a transformer like BERT?</div>
+          <span class="qa-tag t-violet">Model choice</span>
+        </div>
+        <div class="qa-chev">▼</div>
+      </div>
+      <div class="qa-body">
+        <div class="btn-row-qa">
+          <button class="sp" onclick="event.stopPropagation();speakEl(this,'qq5')">🎤 Question</button>
+          <button class="sp" onclick="event.stopPropagation();speakEl(this,'qa5ans')">🔊 Answer</button>
+        </div>
+        <div class="qa-answer" id="qa5ans">
+          <p>At the time of the project, BiLSTM was a strong baseline for sentence classification tasks and significantly cheaper to train and serve than BERT. The inference latency on an ml.m5.xlarge CPU instance is well within acceptable bounds for this batch pipeline — BERT on a CPU instance would be considerably slower per sentence. The financial domain vocabulary is relatively constrained, and the BiLSTM achieved 0.797 accuracy which met the product requirement. A transformer would likely improve Macro F1, but at the cost of a GPU instance for serving, which was not justified given the current accuracy threshold.</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="qa-card" onclick="toggleQA(this)">
+      <div class="qa-top">
+        <div class="qa-icon">📊</div>
+        <div class="qa-q">
+          <div class="qa-q-text" id="qq6">Why Macro F1 as the evaluation metric rather than accuracy?</div>
+          <span class="qa-tag t-violet">Evaluation</span>
+        </div>
+        <div class="qa-chev">▼</div>
+      </div>
+      <div class="qa-body">
+        <div class="btn-row-qa">
+          <button class="sp" onclick="event.stopPropagation();speakEl(this,'qq6')">🎤 Question</button>
+          <button class="sp" onclick="event.stopPropagation();speakEl(this,'qa6ans')">🔊 Answer</button>
+        </div>
+        <div class="qa-answer" id="qa6ans">
+          <p>The three classes are imbalanced. In a typical annual report, most sentences are not relevant to any specific metric, a smaller number are relevant, and a very small number are highly relevant. A model that predicts "not relevant" for every sentence would achieve high accuracy simply because the majority class dominates. Macro F1 averages the F1 score across all three classes equally, regardless of class frequency — so a model must perform well on the rare "highly relevant" class, which is the class that actually matters for producing correct evidence sentences in the final report.</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="qa-card" onclick="toggleQA(this)">
+      <div class="qa-top">
+        <div class="qa-icon">🔄</div>
+        <div class="qa-q">
+          <div class="qa-q-text" id="qq7">How do you update the model without downtime?</div>
+          <span class="qa-tag t-violet">MLOps</span>
+        </div>
+        <div class="qa-chev">▼</div>
+      </div>
+      <div class="qa-body">
+        <div class="btn-row-qa">
+          <button class="sp" onclick="event.stopPropagation();speakEl(this,'qq7')">🎤 Question</button>
+          <button class="sp" onclick="event.stopPropagation();speakEl(this,'qa7ans')">🔊 Answer</button>
+        </div>
+        <div class="qa-answer" id="qa7ans">
+          <p>SageMaker supports blue-green deployment for endpoint updates. When a new model version is trained, it is packaged and uploaded to S3 as a new tar.gz. A new model object is created pointing at the new S3 URI. Calling update_endpoint on the existing endpoint name triggers SageMaker to provision new instances with the new model, wait until they pass health checks, then shift traffic from the old instances to the new ones. The old instances are only terminated after traffic has fully switched. This means the endpoint stays available throughout the update with no downtime window.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ══ PAGE: CHALLENGES ══ -->
+<div class="page" id="problems">
+  <div class="ph">
+    <div class="ph-eyebrow">Engineering Challenges</div>
+    <h1>Problems encountered</h1>
+    <p>Real issues hit during development and how they were resolved.</p>
+  </div>
+
+  <div class="prob-card" onclick="toggleProb(this)">
+    <div class="prob-head">
+      <span class="prob-badge t-amber">Parsing</span>
+      <span class="prob-title">Textract returning fragmented sentences across LINE blocks</span>
+      <span class="prob-chev">▼</span>
+    </div>
+    <div class="prob-body">
+      <div class="prob-section">
+        <div class="prob-section-label" style="color:var(--amber)">Problem</div>
+        <div class="prob-text" id="pr1">Textract's LINE blocks do not always correspond to complete sentences. A single sentence split across two lines in the PDF would come back as two separate LINE blocks — "Sales increased 31% in 2017" and "and 2018, compared to the comparable prior years." — which breaks the classifier because it was trained on full sentences.</div>
+        <button class="sp" onclick="event.stopPropagation();speakEl(this,'pr1')">🔊 Listen</button>
+      </div>
+      <div class="prob-section">
+        <div class="prob-section-label" style="color:var(--green)">Solution</div>
+        <div class="prob-text" id="pr1s">Added a post-processing step in the parsing Lambda that merges consecutive LINE blocks on the same page if the previous block does not end with a sentence-terminating character — period, exclamation mark, or question mark. This recovers most split sentences without requiring expensive re-parsing. The merged result is what gets indexed into OpenSearch and stored in Parquet.</div>
+        <button class="sp" onclick="event.stopPropagation();speakEl(this,'pr1s')">🔊 Listen</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="prob-card" onclick="toggleProb(this)">
+    <div class="prob-head">
+      <span class="prob-badge t-red">SageMaker</span>
+      <span class="prob-title">Model loaded on SageMaker but inference results differed from local test</span>
+      <span class="prob-chev">▼</span>
+    </div>
+    <div class="prob-body">
+      <div class="prob-section">
+        <div class="prob-section-label" style="color:var(--red)">Problem</div>
+        <div class="prob-text" id="pr2">Local test_local.py produced confidence scores around 0.98 for the top sentences. The same sentences sent to the SageMaker endpoint returned scores around 0.45 — completely different. The endpoint was running the right model file but producing wrong predictions.</div>
+        <button class="sp" onclick="event.stopPropagation();speakEl(this,'pr2')">🔊 Listen</button>
+      </div>
+      <div class="prob-section">
+        <div class="prob-section-label" style="color:var(--green)">Root cause</div>
+        <div class="prob-text" id="pr2r">The vocab.json was not included in the model.tar.gz. SageMaker's model_fn was falling back to an empty dictionary, mapping every word to the unknown token index. The model was running, but on a sequence of all-unknown-token inputs — which explains why it produced plausible-looking but completely wrong probabilities rather than crashing.</div>
+        <button class="sp" onclick="event.stopPropagation();speakEl(this,'pr2r')">🔊 Listen</button>
+      </div>
+      <div class="prob-section">
+        <div class="prob-section-label" style="color:var(--green)">Fix</div>
+        <div class="prob-text" id="pr2f">Added vocab.json to the tarball in save_model.py and added an explicit assertion in model_fn that raises an error if the loaded vocab has fewer than 100 entries — which would have surfaced the problem immediately at endpoint startup rather than silently returning wrong scores.</div>
+        <button class="sp" onclick="event.stopPropagation();speakEl(this,'pr2f')">🔊 Listen</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="prob-card" onclick="toggleProb(this)">
+    <div class="prob-head">
+      <span class="prob-badge t-violet">Step Functions</span>
+      <span class="prob-title">Step Functions Map state timeout on large reports</span>
+      <span class="prob-chev">▼</span>
+    </div>
+    <div class="prob-body">
+      <div class="prob-section">
+        <div class="prob-section-label" style="color:var(--violet)">Problem</div>
+        <div class="prob-text" id="pr3">For large annual reports with many metrics running in parallel, the Step Functions execution was hitting the Lambda concurrency limit for the account, causing some Stage 2 invocations to be throttled and eventually timing out.</div>
+        <button class="sp" onclick="event.stopPropagation();speakEl(this,'pr3')">🔊 Listen</button>
+      </div>
+      <div class="prob-section">
+        <div class="prob-section-label" style="color:var(--green)">Solution</div>
+        <div class="prob-text" id="pr3s">Set MaxConcurrency to 5 on the Map state, which limits how many metric branches run simultaneously. Added retry configuration on the Stage 2 task with exponential backoff — up to 3 retries with a 2-second initial interval. Also reserved concurrency on the Stage 2 Lambda to guarantee it always has capacity available, preventing it from being crowded out by other functions in the same account.</div>
+        <button class="sp" onclick="event.stopPropagation();speakEl(this,'pr3s')">🔊 Listen</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="prob-card" onclick="toggleProb(this)">
+    <div class="prob-head">
+      <span class="prob-badge t-blue">OpenSearch</span>
+      <span class="prob-title">OpenSearch bulk indexing failing silently on large batches</span>
+      <span class="prob-chev">▼</span>
+    </div>
+    <div class="prob-body">
+      <div class="prob-section">
+        <div class="prob-section-label" style="color:var(--blue)">Problem</div>
+        <div class="prob-text" id="pr4">The parsing Lambda reported successful indexing but some sentences were missing from OpenSearch search results. The bulk call returned without raising an exception even though some documents had failed to index due to a mapping conflict on the "confidence" field — Textract sometimes returns a string, sometimes a float.</div>
+        <button class="sp" onclick="event.stopPropagation();speakEl(this,'pr4')">🔊 Listen</button>
+      </div>
+      <div class="prob-section">
+        <div class="prob-section-label" style="color:var(--green)">Solution</div>
+        <div class="prob-text" id="pr4s">Two changes. First, explicitly cast the confidence field to float before indexing — removing the type ambiguity at source. Second, changed the helpers.bulk call to raise_on_error equals True and log the full errors list when it is non-empty. This surfaced the mapping conflict immediately on the next run instead of silently dropping documents. Also defined an explicit index mapping in OpenSearch so type conflicts are caught at index creation time rather than at document ingestion time.</div>
+        <button class="sp" onclick="event.stopPropagation();speakEl(this,'pr4s')">🔊 Listen</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="prob-card" onclick="toggleProb(this)">
+    <div class="prob-head">
+      <span class="prob-badge t-coral">Class imbalance</span>
+      <span class="prob-title">Model predicting "not relevant" for almost everything</span>
+      <span class="prob-chev">▼</span>
+    </div>
+    <div class="prob-body">
+      <div class="prob-section">
+        <div class="prob-section-label" style="color:var(--coral)">Problem</div>
+        <div class="prob-text" id="pr5">Early training runs produced a model with high accuracy but very low Macro F1 — around 0.4. Inspection showed the model was predicting class 0 (not relevant) for nearly all inputs. The training data had severe class imbalance: roughly 80% not relevant, 15% relevant, 5% highly relevant.</div>
+        <button class="sp" onclick="event.stopPropagation();speakEl(this,'pr5')">🔊 Listen</button>
+      </div>
+      <div class="prob-section">
+        <div class="prob-section-label" style="color:var(--green)">Solution</div>
+        <div class="prob-text" id="pr5s">Applied class weights during training — the highly relevant class received a weight approximately 16 times higher than the not relevant class, forcing the model to penalise misclassifying rare positive examples more heavily. Also used stratified sampling to ensure every training batch contained examples from all three classes. These two changes together pushed Macro F1 from 0.4 to 0.737 while keeping accuracy at 0.797.</div>
+        <button class="sp" onclick="event.stopPropagation();speakEl(this,'pr5s')">🔊 Listen</button>
+      </div>
+    </div>
+  </div>
+
+</div><!-- /problems -->
+
+<script>
+function showPage(id, btn) {
+  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+  btn.classList.add('active');
+}
+
+function toggleQA(card) { card.classList.toggle('open'); }
+function toggleProb(card) { card.classList.toggle('open'); }
+
+// ── Google TTS ─────────────────────────────────────────────────────────────
+var _btn = null, _queue = [], _audio = null;
+
+function _chunk(text, max) {
+  var sents = text.match(/[^.!?]+[.!?]+|[^.!?]+$/g) || [text];
+  var chunks = [], cur = '';
+  for (var i = 0; i < sents.length; i++) {
+    if ((cur + sents[i]).length > max) { if (cur) chunks.push(cur.trim()); cur = sents[i]; }
+    else cur += sents[i];
+  }
+  if (cur.trim()) chunks.push(cur.trim());
+  return chunks.filter(function(c){ return c.length > 0; });
+}
+
+function _url(t) {
+  return 'https://translate.google.com/translate_tts?ie=UTF-8&q='
+    + encodeURIComponent(t) + '&tl=en-US&client=tw-ob';
+}
+
+function _stop() {
+  _queue = [];
+  if (_audio) { _audio.pause(); _audio.src = ''; _audio = null; }
+}
+
+function _play(btn) {
+  if (!_queue.length) { _resetBtn(btn); _btn = null; return; }
+  var a = new Audio(_queue.shift()); _audio = a;
+  a.onended = function(){ _audio = null; _play(btn); };
+  a.onerror = function(){ _audio = null; _play(btn); };
+  a.play().catch(function(){ _audio = null; _play(btn); });
+}
+
+function speakEl(btn, elId) {
+  if (_btn === btn) { _stop(); _resetBtn(btn); _btn = null; return; }
+  if (_btn) { _stop(); _resetBtn(_btn); _btn = null; }
+  var el = document.getElementById(elId);
+  if (!el) return;
+  var text = el.innerText
+    .replace(/[▶■🔊🎤]\s*(Listen|Question|Answer)?\s*/g, '')
+    .replace(/\s+/g, ' ').trim();
+  if (!text) return;
+  _queue = _chunk(text, 190).map(_url);
+  _btn = btn;
+  btn.innerHTML = '■ Stop';
+  btn.classList.add('playing');
+  _play(btn);
+}
+
+function _resetBtn(btn) {
+  if (!btn) return;
+  var lbl = btn.innerHTML;
+  if (lbl.indexOf('Question') > -1 || btn.classList.contains('q-btn')) {
+    btn.innerHTML = '🎤 Question';
+  } else {
+    btn.innerHTML = '🔊 Listen';
+  }
+  btn.classList.remove('playing');
+}
+
+// fix reset for QA buttons
+document.addEventListener('DOMContentLoaded', function(){
+  document.querySelectorAll('.qa-body .sp').forEach(function(btn){
+    if (btn.innerHTML.indexOf('Question') > -1) btn.classList.add('q-btn');
+  });
+});
+</script>
+</body>
+</html>

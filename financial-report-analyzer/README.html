@@ -1,0 +1,317 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Financial Report Analyzer — README</title>
+<style>
+:root {
+  --bg:#F8F9FB; --white:#FFFFFF; --border:#E3E6EE;
+  --text:#111827; --dim:#4B5563; --faint:#9CA3AF;
+  --teal:#0891B2; --teal-bg:#ECFEFF; --teal-bd:#A5F3FC;
+  --blue:#2563EB; --blue-bg:#EFF6FF; --blue-bd:#BFDBFE;
+  --green:#059669; --green-bg:#ECFDF5; --green-bd:#6EE7B7;
+  --amber:#D97706; --amber-bg:#FFFBEB; --amber-bd:#FCD34D;
+  --violet:#7C3AED; --violet-bg:#F5F3FF; --violet-bd:#C4B5FD;
+  --purple:#6D28D9; --purple-bg:#F5F3FF; --purple-bd:#C4B5FD;
+}
+*{box-sizing:border-box;margin:0;padding:0;}
+body{background:var(--bg);color:var(--text);font-family:-apple-system,'Segoe UI',sans-serif;font-size:15px;line-height:1.7;padding:36px 24px 80px;max-width:900px;margin:0 auto;}
+
+/* header */
+.hero{padding:28px 0 24px;border-bottom:2px solid var(--text);margin-bottom:32px;}
+.hero-eyebrow{font-size:11px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--faint);margin-bottom:10px;}
+.hero h1{font-size:28px;font-weight:700;letter-spacing:-.02em;margin-bottom:10px;}
+.hero-meta{display:flex;gap:16px;flex-wrap:wrap;font-size:13px;color:var(--dim);}
+.badge{display:inline-flex;align-items:center;gap:5px;background:var(--white);border:1px solid var(--border);border-radius:20px;padding:4px 12px;font-size:12px;font-weight:600;}
+
+/* section */
+.sec{margin-bottom:40px;}
+.sec-title{font-size:13px;font-weight:700;letter-spacing:.09em;text-transform:uppercase;color:var(--faint);margin-bottom:16px;padding-bottom:8px;border-bottom:1px solid var(--border);}
+
+/* speak button */
+.sp{display:inline-flex;align-items:center;gap:4px;font-size:11px;font-weight:600;padding:3px 9px;border-radius:5px;border:1px solid var(--teal-bd);background:var(--teal-bg);color:var(--teal);cursor:pointer;margin-top:8px;transition:all .15s;white-space:nowrap;}
+.sp:hover{background:var(--teal);color:#fff;}
+.sp.playing{background:#FEF2F2;color:#DC2626;border-color:#FCA5A5;}
+
+/* block */
+.block{background:var(--white);border:1px solid var(--border);border-radius:10px;padding:18px 20px;margin-bottom:12px;}
+.block p{color:var(--dim);font-size:14px;line-height:1.7;}
+.block-title{font-size:14px;font-weight:600;color:var(--text);margin-bottom:8px;}
+.bl-blue{border-left:3px solid var(--blue);background:var(--blue-bg);}
+.bl-teal{border-left:3px solid var(--teal);background:var(--teal-bg);}
+.bl-green{border-left:3px solid var(--green);background:var(--green-bg);}
+.bl-amber{border-left:3px solid var(--amber);background:var(--amber-bg);}
+.bl-violet{border-left:3px solid var(--violet);background:var(--violet-bg);}
+
+/* arch diagram */
+.arch-img{width:100%;border:1px solid var(--border);border-radius:10px;margin-bottom:12px;}
+
+/* bucket row */
+.bucket-row{display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px;margin-bottom:16px;}
+.bucket{background:var(--blue-bg);border:1px solid var(--blue-bd);border-radius:8px;padding:12px 14px;text-align:center;}
+.bucket-name{font-size:13px;font-weight:600;color:var(--blue);margin-bottom:3px;}
+.bucket-desc{font-size:12px;color:var(--dim);}
+
+/* steps */
+.step{display:flex;gap:14px;margin-bottom:16px;}
+.step-num{width:28px;height:28px;border-radius:50%;background:var(--text);color:#fff;font-size:12px;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:2px;}
+.step-body{flex:1;}
+.step-title{font-size:14px;font-weight:600;margin-bottom:4px;}
+.step-desc{font-size:13.5px;color:var(--dim);line-height:1.6;}
+
+/* code block */
+.code{background:#1E2433;color:#C8D0E0;font-family:'Menlo','Consolas',monospace;font-size:12.5px;line-height:1.6;border-radius:8px;padding:16px 18px;margin:10px 0;overflow-x:auto;white-space:pre;}
+
+/* table */
+.tbl{width:100%;border-collapse:collapse;font-size:13.5px;margin-bottom:12px;}
+.tbl th{text-align:left;font-weight:600;padding:9px 12px;background:var(--bg);border-bottom:2px solid var(--border);color:var(--text);}
+.tbl td{padding:9px 12px;border-bottom:1px solid var(--border);color:var(--dim);vertical-align:top;}
+.tbl tr:last-child td{border-bottom:none;}
+
+/* pipeline flow */
+.flow{background:var(--white);border:1px solid var(--border);border-radius:10px;padding:18px 20px;margin-bottom:12px;}
+.flow-line{display:flex;align-items:flex-start;gap:10px;margin-bottom:8px;font-size:13.5px;color:var(--dim);}
+.flow-arrow{color:var(--faint);margin-top:1px;flex-shrink:0;}
+.flow-tag{font-size:10px;font-weight:700;letter-spacing:.07em;text-transform:uppercase;padding:2px 7px;border-radius:4px;flex-shrink:0;margin-top:2px;}
+.t-blue{background:var(--blue-bg);color:var(--blue);}
+.t-teal{background:var(--teal-bg);color:var(--teal);}
+.t-violet{background:var(--violet-bg);color:var(--violet);}
+.t-amber{background:var(--amber-bg);color:var(--amber);}
+.t-green{background:var(--green-bg);color:var(--green);}
+
+/* notice */
+.notice{font-size:12px;color:var(--dim);background:var(--teal-bg);border:1px solid var(--teal-bd);border-radius:7px;padding:9px 14px;margin-bottom:24px;}
+
+/* dir tree */
+.tree{background:#1E2433;color:#C8D0E0;font-family:'Menlo','Consolas',monospace;font-size:12.5px;line-height:1.8;border-radius:8px;padding:16px 18px;margin-bottom:12px;}
+</style>
+</head>
+<body>
+
+<!-- ══ HERO ══ -->
+<div class="hero">
+  <div class="hero-eyebrow">6Estates · Singapore</div>
+  <h1>Financial Report Analyzer</h1>
+  <div class="hero-meta">
+    <span class="badge">Accuracy 0.797</span>
+    <span class="badge">Macro F1 0.737</span>
+    <span class="badge">DBS · Credit Suisse · BCA</span>
+    <span class="badge">AWS · SageMaker · OpenSearch</span>
+  </div>
+</div>
+
+<div class="notice">🔊 Requires internet. Open in Chrome for audio. Click any 🔊 button to hear that paragraph.</div>
+
+<!-- ══ OVERVIEW ══ -->
+<div class="sec">
+  <div class="sec-title">Overview</div>
+
+  <div class="block bl-blue" id="ov1">
+    <div class="block-title">What this system does</div>
+    <p>End-to-end AWS pipeline that ingests annual and quarterly PDF reports from financial institutions and produces structured analysis reports with supporting sentence evidence. A PDF goes in — a report.html with cited supporting sentences and confidence scores comes out, fully automated.</p>
+    <button class="sp" onclick="speakEl(this,'ov1')">🔊 Listen</button>
+  </div>
+
+  <div class="block bl-blue" id="ov2">
+    <div class="block-title">Two-stage NLP pipeline</div>
+    <p>Stage 1 uses OpenSearch keyword retrieval to narrow approximately 3,000 extracted sentences down to 100 candidates per financial metric. Stage 2 sends those 100 candidates to a Keras text classifier deployed on SageMaker, which identifies the top 3 supporting sentences with confidence scores. The pipeline runs all metrics in parallel via AWS Step Functions.</p>
+    <button class="sp" onclick="speakEl(this,'ov2')">🔊 Listen</button>
+  </div>
+</div>
+
+<!-- ══ ARCHITECTURE ══ -->
+<div class="sec">
+  <div class="sec-title">Architecture</div>
+
+  <img src="./docs/architecture.svg" alt="Financial Report Analyzer architecture diagram" class="arch-img">
+
+  <div class="bucket-row">
+    <div class="bucket">
+      <div class="bucket-name">S3 raw</div>
+      <div class="bucket-desc">Original PDF files</div>
+    </div>
+    <div class="bucket">
+      <div class="bucket-name">S3 processed</div>
+      <div class="bucket-desc">Parsed text · intermediate results</div>
+    </div>
+    <div class="bucket">
+      <div class="bucket-name">S3 models</div>
+      <div class="bucket-desc">Keras model tar.gz</div>
+    </div>
+  </div>
+
+  <div class="flow" id="flow1">
+    <div class="block-title" style="margin-bottom:12px;">Pipeline flow</div>
+    <div class="flow-line"><span class="flow-tag t-blue">Ingest</span><span class="flow-arrow">→</span><span>PDF upload via Web API · API Gateway · ingestion Lambda · stored in S3 raw bucket</span></div>
+    <div class="flow-line"><span class="flow-tag t-teal">Parse</span><span class="flow-arrow">→</span><span>Textract parsing Lambda reads PDF · extracts all text · up to ~3,000 sentences · bulk indexed into OpenSearch</span></div>
+    <div class="flow-line"><span class="flow-tag t-violet">Stage 1</span><span class="flow-arrow">→</span><span>OpenSearch keyword search per financial metric · 3,000 → 100 candidates (Step Functions, parallel per metric)</span></div>
+    <div class="flow-line"><span class="flow-tag t-amber">Stage 2</span><span class="flow-arrow">→</span><span>Lambda calls SageMaker Keras endpoint · returns Top-3 sentences + confidence scores per metric</span></div>
+    <div class="flow-line"><span class="flow-tag t-green">Output</span><span class="flow-arrow">→</span><span>Assembly Lambda merges results → result.json → report.html → written to S3 analytics bucket</span></div>
+    <button class="sp" onclick="speakEl(this,'flow1')">🔊 Listen</button>
+  </div>
+</div>
+
+<!-- ══ DIRECTORY STRUCTURE ══ -->
+<div class="sec">
+  <div class="sec-title">Directory structure</div>
+  <div class="tree">financial-report-analyzer/
+│
+├── ingestion/
+│   └── lambda_handler.py        API Gateway → S3 raw bucket
+│
+├── parsing/
+│   └── lambda_handler.py        Textract → OpenSearch (all text indexed)
+│
+├── stage1_retrieval/
+│   └── lambda_handler.py        OpenSearch keyword search → 100 candidates
+│
+├── stage2_classification/
+│   ├── inference.py             SageMaker entry point (model_fn / predict_fn)
+│   ├── lambda_handler.py        Calls SageMaker endpoint, returns Top-3
+│   ├── model/
+│   │   └── save_model.py        Save + package trained Keras model
+│   ├── deploy/
+│   │   └── upload_and_deploy.py Upload model to S3 + deploy SageMaker endpoint
+│   └── test/
+│       └── test_local.py        Local model test (no AWS needed)
+│
+├── assembly/
+│   └── lambda_handler.py        Merges Top-3 + field values → result.json → report.html
+│
+├── docs/
+│   └── architecture.svg         Architecture diagram
+│
+└── infra/
+    ├── main.tf                  S3 buckets, IAM roles, Lambda functions, S3 trigger
+    └── step_functions.tf        Step Functions state machine</div>
+</div>
+
+<!-- ══ SETUP ══ -->
+<div class="sec">
+  <div class="sec-title">Step-by-step setup</div>
+
+  <div class="step">
+    <div class="step-num">1</div>
+    <div class="step-body">
+      <div class="step-title">Deploy model to SageMaker — do this first</div>
+      <div class="step-desc" id="s1">Save and package your trained Keras model, test it locally without AWS, then upload the tar.gz to S3 models bucket and deploy the SageMaker endpoint.</div>
+      <button class="sp" onclick="speakEl(this,'s1')">🔊 Listen</button>
+      <div class="code">python stage2_classification/model/save_model.py
+python stage2_classification/test/test_local.py
+pip install boto3 sagemaker
+python stage2_classification/deploy/upload_and_deploy.py</div>
+    </div>
+  </div>
+
+  <div class="step">
+    <div class="step-num">2</div>
+    <div class="step-body">
+      <div class="step-title">Deploy infrastructure with Terraform</div>
+      <div class="step-desc" id="s2">Package all Lambda function code into a zip, then use Terraform to provision S3 buckets, IAM roles, Lambda functions, the S3 upload trigger, and the Step Functions state machine.</div>
+      <button class="sp" onclick="speakEl(this,'s2')">🔊 Listen</button>
+      <div class="code">zip -r infra/lambda_functions.zip ingestion/ parsing/ stage1_retrieval/ \
+    stage2_classification/lambda_handler.py assembly/ -x "*__pycache__*"
+
+cd infra
+terraform init
+terraform apply -var="opensearch_host=your-domain.ap-southeast-1.es.amazonaws.com"</div>
+    </div>
+  </div>
+
+  <div class="step">
+    <div class="step-num">3</div>
+    <div class="step-body">
+      <div class="step-title">Test the pipeline</div>
+      <div class="step-desc" id="s3">Upload a PDF via the API Gateway endpoint. Processing starts automatically — check the S3 analytics bucket for the output report.html once the Step Functions execution completes.</div>
+      <button class="sp" onclick="speakEl(this,'s3')">🔊 Listen</button>
+      <div class="code">curl -X POST \
+  "https://your-api-id.execute-api.ap-southeast-1.amazonaws.com/prod/upload?company=amazon&year=2026&type=annual" \
+  -H "Content-Type: application/pdf" \
+  --data-binary @amazon_annual_report_2026.pdf</div>
+      <div style="margin-top:10px;font-size:13px;color:var(--dim);">Output location:</div>
+      <div class="code">s3://financial-report-analyzer-analytics/reports/amazon/2026/{file_id}_report.html
+s3://financial-report-analyzer-analytics/reports/amazon/2026/{file_id}_result.json</div>
+    </div>
+  </div>
+
+  <div class="step">
+    <div class="step-num">4</div>
+    <div class="step-body">
+      <div class="step-title">Clean up to avoid ongoing charges</div>
+      <div class="step-desc" id="s4">The SageMaker endpoint is the most expensive continuously running resource. Delete it first, then destroy all Terraform-managed infrastructure.</div>
+      <button class="sp" onclick="speakEl(this,'s4')">🔊 Listen</button>
+      <div class="code">aws sagemaker delete-endpoint --endpoint-name keras-financial-classifier
+cd infra && terraform destroy -var="opensearch_host=your-domain..."</div>
+    </div>
+  </div>
+</div>
+
+<!-- ══ DESIGN DECISIONS ══ -->
+<div class="sec">
+  <div class="sec-title">Key design decisions</div>
+
+  <div class="block bl-teal" id="d1">
+    <div class="block-title">Step Functions orchestrates Stage 1 → Stage 2</div>
+    <p>Separates concerns and enables per-metric retry without restarting the full pipeline. The Map state with MaxConcurrency set to 5 runs all financial metrics in parallel while preventing Lambda throttling at the account level.</p>
+    <button class="sp" onclick="speakEl(this,'d1')">🔊 Listen</button>
+  </div>
+
+  <div class="block bl-teal" id="d2">
+    <div class="block-title">OpenSearch for full-text indexing</div>
+    <p>All sentences extracted from a PDF are indexed at parse time. Stage 1 keyword search at query time is then instant — no need to re-scan the raw text. This also allows the same index to serve multiple metrics in parallel without re-reading S3.</p>
+    <button class="sp" onclick="speakEl(this,'d2')">🔊 Listen</button>
+  </div>
+
+  <div class="block bl-teal" id="d3">
+    <div class="block-title">SageMaker ml.m5.xlarge CPU instance</div>
+    <p>Keras inference on 100 sentences per metric is fast enough on CPU — no GPU required. This avoids GPU instance costs which would be significant for a batch pipeline that runs only when a report is uploaded.</p>
+    <button class="sp" onclick="speakEl(this,'d3')">🔊 Listen</button>
+  </div>
+
+  <div class="block bl-teal" id="d4">
+    <div class="block-title">Three separate S3 buckets</div>
+    <p>Raw, processed, and models buckets are kept separate to apply different lifecycle policies, encryption settings, and access controls to each. Raw PDFs and model files have different retention requirements than intermediate parsed results and final reports.</p>
+    <button class="sp" onclick="speakEl(this,'d4')">🔊 Listen</button>
+  </div>
+
+  <div class="block bl-teal" id="d5">
+    <div class="block-title">result.json rendered as report.html</div>
+    <p>The structured JSON output enables programmatic downstream access and re-rendering. The HTML report gives analysts direct browser access without any tooling. Both are written to the S3 analytics bucket from the assembly Lambda.</p>
+    <button class="sp" onclick="speakEl(this,'d5')">🔊 Listen</button>
+  </div>
+</div>
+
+<!-- ══ DESIGN TABLE ══ -->
+<div class="sec">
+  <div class="sec-title">Summary table</div>
+  <table class="tbl">
+    <tr><th>Decision</th><th>Reason</th></tr>
+    <tr><td>Step Functions + Map state (MaxConcurrency=5)</td><td>Parallel per-metric processing; per-metric retry without full pipeline restart</td></tr>
+    <tr><td>OpenSearch for all sentence indexing</td><td>Instant keyword search at query time; single index serves all metrics</td></tr>
+    <tr><td>Keras endpoint on ml.m5.xlarge CPU</td><td>Sufficient for 100-sentence batches; avoids GPU cost</td></tr>
+    <tr><td>Three S3 buckets (raw / processed / models)</td><td>Separate lifecycle policies, encryption, and access controls per bucket type</td></tr>
+    <tr><td>result.json → report.html</td><td>JSON for programmatic access; HTML for direct analyst browser access</td></tr>
+    <tr><td>Terraform for infrastructure; SDK for SageMaker</td><td>Infrastructure changes infrequently; model updates independently — separate deployment paths</td></tr>
+  </table>
+</div>
+
+<script>
+var _btn=null,_queue=[],_audio=null;
+function _chunk(t,m){var s=t.match(/[^.!?]+[.!?]+|[^.!?]+$/g)||[t],c=[],cur='';for(var i=0;i<s.length;i++){if((cur+s[i]).length>m){if(cur)c.push(cur.trim());cur=s[i];}else cur+=s[i];}if(cur.trim())c.push(cur.trim());return c.filter(function(x){return x.length>0;});}
+function _url(t){return 'https://translate.google.com/translate_tts?ie=UTF-8&q='+encodeURIComponent(t)+'&tl=en-US&client=tw-ob';}
+function _stop(){_queue=[];if(_audio){_audio.pause();_audio.src='';_audio=null;}}
+function _play(b){if(!_queue.length){_resetBtn(b);_btn=null;return;}var a=new Audio(_queue.shift());_audio=a;a.onended=function(){_audio=null;_play(b);};a.onerror=function(){_audio=null;_play(b);};a.play().catch(function(){_audio=null;_play(b);});}
+function speakEl(btn,elId){
+  if(_btn===btn){_stop();_resetBtn(btn);_btn=null;return;}
+  if(_btn){_stop();_resetBtn(_btn);_btn=null;}
+  var el=document.getElementById(elId);if(!el)return;
+  var text=el.innerText.replace(/[▶■🔊]\s*(Listen)?\s*/g,'').replace(/\s+/g,' ').trim();
+  if(!text)return;
+  _queue=_chunk(text,190).map(_url);
+  _btn=btn;btn.innerHTML='■ Stop';btn.classList.add('playing');_play(btn);
+}
+function _resetBtn(b){if(!b)return;b.innerHTML='🔊 Listen';b.classList.remove('playing');}
+</script>
+</body>
+</html>

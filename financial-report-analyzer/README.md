@@ -1,46 +1,29 @@
-# Financial Report Analyzer — Complete AWS Pipeline
+# Financial Report Analyzer — AWS Pipeline
 
-End-to-end system for ingesting annual/quarterly PDF reports and producing
-structured financial analysis with supporting sentence evidence.
+End-to-end system for ingesting annual and quarterly PDF reports and producing
+structured financial analysis reports with supporting sentence evidence.
 
-Accuracy 0.797 · Macro F1 0.737
+**Clients:** DBS · Credit Suisse · BCA  
+**Model performance:** Accuracy 0.797 · Macro F1 0.737
 
 ---
 
 ## Architecture
 
-```
-PDF upload (Web API)
-        │
-        ▼
-API Gateway → ingestion/Lambda → S3 raw bucket
-                                        │
-                                        ▼ (S3 trigger)
-                               parsing/Lambda
-                               └─ Textract (~3,000 sentences)
-                               └─ S3 Parquet (processed bucket)
-                               └─ OpenSearch bulk index
-                                        │
-                                        ▼ (Step Functions)
-                    ┌───────────────────┴───────────────────┐
-                    │   Per metric (parallel, MaxConcurrency=5)  │
-                    │                                            │
-                    │  stage1/Lambda                             │
-                    │  └─ OpenSearch BM25 search                 │
-                    │  └─ TF-IDF re-rank  →  100 candidates      │
-                    │           │                                 │
-                    │           ▼                                 │
-                    │  stage2/Lambda → SageMaker Endpoint         │
-                    │  └─ Keras BiLSTM classifier                │
-                    │  └─ Top-3 sentences + confidence scores    │
-                    └───────────────────┬───────────────────┘
-                                        │
-                                        ▼
-                               assembly/Lambda
-                               └─ report.md  (amazon_630.md format)
-                               └─ result.json (amazon_630.json format)
-                               └─ written to S3 processed bucket
-```
+![Architecture](./docs/architecture.svg)
+
+**Three S3 buckets:**
+- `S3 raw` — original PDFs
+- `S3 processed` — parsed text and intermediate results
+- `S3 models` — trained Keras model (tar.gz) loaded by SageMaker
+
+**Pipeline flow:**  
+PDF upload → API Gateway → ingestion Lambda → S3 raw  
+→ Textract parsing Lambda → all text indexed into OpenSearch (~3,000 sentences)  
+→ Step Functions (per metric, parallel):  
+&nbsp;&nbsp;Stage 1: OpenSearch keyword retrieval → 100 candidates  
+&nbsp;&nbsp;Stage 2: Keras endpoint on SageMaker → Top-3 + confidence scores  
+→ Assembly Lambda → result.json → report.html → S3 analytics bucket
 
 ---
 
@@ -53,23 +36,26 @@ financial-report-analyzer/
 │   └── lambda_handler.py        API Gateway → S3 raw bucket
 │
 ├── parsing/
-│   └── lambda_handler.py        Textract → S3 Parquet + OpenSearch
+│   └── lambda_handler.py        Textract → OpenSearch (all text indexed)
 │
 ├── stage1_retrieval/
-│   └── lambda_handler.py        OpenSearch BM25 + TF-IDF  →  100 candidates
+│   └── lambda_handler.py        OpenSearch keyword search → 100 candidates
 │
 ├── stage2_classification/
 │   ├── inference.py             SageMaker entry point (model_fn / predict_fn)
-│   ├── lambda_handler.py        Calls SageMaker Endpoint, returns Top-3
+│   ├── lambda_handler.py        Calls SageMaker endpoint, returns Top-3
 │   ├── model/
-│   │   └── save_model.py        Save + package trained Keras BiLSTM model
+│   │   └── save_model.py        Save + package trained Keras model
 │   ├── deploy/
-│   │   └── upload_and_deploy.py Upload to S3 + deploy SageMaker Endpoint
+│   │   └── upload_and_deploy.py Upload model to S3 + deploy SageMaker endpoint
 │   └── test/
 │       └── test_local.py        Local model test (no AWS needed)
 │
 ├── assembly/
-│   └── lambda_handler.py        Merges Top-3 + field values → report.md + result.json
+│   └── lambda_handler.py        Merges Top-3 + field values → result.json → report.html
+│
+├── docs/
+│   └── architecture.svg         Architecture diagram
 │
 └── infra/
     ├── main.tf                  S3 buckets, IAM roles, Lambda functions, S3 trigger
@@ -83,13 +69,13 @@ financial-report-analyzer/
 ### 1. Deploy model to SageMaker (do this first)
 
 ```bash
-# Save and package your trained BiLSTM model
+# Save and package your trained Keras model
 python stage2_classification/model/save_model.py
 
-# Test locally (no AWS needed)
+# Test locally — no AWS account needed
 python stage2_classification/test/test_local.py
 
-# Upload to S3 and deploy endpoint
+# Upload model to S3 models bucket and deploy endpoint
 pip install boto3 sagemaker
 python stage2_classification/deploy/upload_and_deploy.py
 ```
@@ -97,25 +83,18 @@ python stage2_classification/deploy/upload_and_deploy.py
 ### 2. Deploy infrastructure with Terraform
 
 ```bash
-cd infra
-terraform init
-
-# Package all Lambda code first
-cd ..
+# Package all Lambda functions
 zip -r infra/lambda_functions.zip ingestion/ parsing/ stage1_retrieval/ \
     stage2_classification/lambda_handler.py assembly/ -x "*__pycache__*"
 
 cd infra
-terraform plan \
-  -var="opensearch_host=your-domain.ap-southeast-1.es.amazonaws.com"
-
-terraform apply \
-  -var="opensearch_host=your-domain.ap-southeast-1.es.amazonaws.com"
+terraform init
+terraform apply -var="opensearch_host=your-domain.ap-southeast-1.es.amazonaws.com"
 ```
 
-### 3. Test the full pipeline
+### 3. Test the pipeline
 
-Upload a PDF via API Gateway:
+Upload a PDF:
 
 ```bash
 curl -X POST \
@@ -124,22 +103,21 @@ curl -X POST \
   --data-binary @amazon_annual_report_2026.pdf
 ```
 
-Check the output in S3:
+Check output in S3 analytics bucket:
 
 ```
-s3://financial-report-analyzer-processed/reports/amazon/2026/{file_id}_report.md
-s3://financial-report-analyzer-processed/reports/amazon/2026/{file_id}_result.json
+s3://financial-report-analyzer-analytics/reports/amazon/2026/{file_id}_report.html
+s3://financial-report-analyzer-analytics/reports/amazon/2026/{file_id}_result.json
 ```
 
-### 4. Clean up (to avoid ongoing charges)
+### 4. Clean up
 
 ```bash
-# Delete SageMaker endpoint (most expensive resource)
-aws sagemaker delete-endpoint --endpoint-name bilstm-financial-classifier
+# Delete SageMaker endpoint (most expensive running resource)
+aws sagemaker delete-endpoint --endpoint-name keras-financial-classifier
 
-# Destroy all Terraform-managed resources
-cd infra
-terraform destroy -var="opensearch_host=your-domain..."
+# Destroy all Terraform resources
+cd infra && terraform destroy -var="opensearch_host=your-domain..."
 ```
 
 ---
@@ -148,8 +126,9 @@ terraform destroy -var="opensearch_host=your-domain..."
 
 | Decision | Why |
 |---|---|
-| Step Functions orchestrates Stage 1 → Stage 2 | Separates concerns; easy to retry individual stages |
-| Map state with MaxConcurrency=5 | Runs all metrics in parallel; safe concurrency limit |
-| OpenSearch BM25 first, then TF-IDF re-rank | BM25 is fast; TF-IDF refines the ranking cheaply in Lambda |
-| SageMaker ml.m5.xlarge (CPU) | BiLSTM inference is fast enough on CPU; no GPU cost |
-| Parquet + partitioned by company/year | Athena scans only the relevant partition per query |
+| Step Functions orchestrates Stage 1 → Stage 2 | Separates concerns; per-metric retry without restarting the full pipeline |
+| Map state with MaxConcurrency=5 | Runs all metrics in parallel; prevents Lambda throttling |
+| OpenSearch for full-text indexing | All ~3,000 sentences indexed at parse time; keyword search at query time is instant |
+| SageMaker ml.m5.xlarge (CPU) | Keras inference is fast enough on CPU; no GPU cost |
+| Three separate S3 buckets | Clear separation of raw data, intermediate results, and final reports |
+| result.json → report.html | Structured JSON enables programmatic access; HTML enables direct analyst access |
