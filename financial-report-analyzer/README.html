@@ -252,7 +252,7 @@ cd infra && terraform destroy -var="opensearch_host=your-domain..."</div>
   <div class="sec-title">Key design decisions</div>
 
   <div class="block bl-teal" id="d1">
-    <div class="block-title">Step Functions orchestrates Stage 1 → Stage 2</div>
+    <div class="block-title">Single pipeline Lambda orchestrates full flow</div>
     <p>Separates concerns and enables per-metric retry without restarting the full pipeline. The Map state with MaxConcurrency set to 5 runs all financial metrics in parallel while preventing Lambda throttling at the account level.</p>
     <button class="sp" onclick="speakEl(this,'d1')">🔊 Listen</button>
   </div>
@@ -287,7 +287,7 @@ cd infra && terraform destroy -var="opensearch_host=your-domain..."</div>
   <div class="sec-title">Summary table</div>
   <table class="tbl">
     <tr><th>Decision</th><th>Reason</th></tr>
-    <tr><td>Step Functions + Map state (MaxConcurrency=5)</td><td>Parallel per-metric processing; per-metric retry without full pipeline restart</td></tr>
+    <tr><td>Step Functions + Map state (MaxConcurrency=5)</td><td>All steps run sequentially inside one Lambda; simple and maintainable</td></tr>
     <tr><td>OpenSearch for all sentence indexing</td><td>Instant keyword search at query time; single index serves all metrics</td></tr>
     <tr><td>Keras endpoint on ml.m5.xlarge CPU</td><td>Sufficient for 100-sentence batches; avoids GPU cost</td></tr>
     <tr><td>Three S3 buckets (raw / processed / models)</td><td>Separate lifecycle policies, encryption, and access controls per bucket type</td></tr>
